@@ -1,0 +1,19 @@
+{
+  "name": "blog-api-nodejs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chae1-1111/blog-api-nodejs.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/chae1-1111/blog-api-nodejs/issues"
+  },
+  "homepage": "https://github.com/chae1-1111/blog-api-nodejs#readme"
+}
