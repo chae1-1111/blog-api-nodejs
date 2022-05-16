@@ -22,9 +22,23 @@ const memberController = {
                 if (err) {
                     console.log(err);
                     callback(err, null);
-                    return;
                 } else {
                     callback(null, result);
+                }
+            }
+        );
+    },
+
+    idCheck: (userid: String, callback: Function) => {
+        (global as any).MemberModel.find(
+            { UserId: userid },
+            (err: any, result: any) => {
+                if (err) {
+                    console.log(err);
+                    callback(err, null);
+                    return;
+                } else {
+                    callback(null, result.length == 0 ? true : false);
                 }
             }
         );
