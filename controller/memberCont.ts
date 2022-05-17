@@ -46,35 +46,35 @@ const memberController = {
 
     modify: (userFilter: any, user: any, callback: Function) => {
         (global as any).MemberModel.updateOne(
-            {...userFilter},
-            {$set:{...user}},
+            { ...userFilter },
+            { $set: { ...user } },
             (err: any, result: any) => {
-                if(err){
+                if (err) {
                     console.log(err);
                     callback(err, null);
                     return;
-                }else{
+                } else {
                     callback(null, result);
                     return;
                 }
             }
-        )
+        );
     },
-    
+
     delete: (user: any, callback: Function) => {
         (global as any).MemberModel.deleteOne(
-            {...user,},
+            { ...user },
             (err: any, result: any) => {
-                if(err){
+                if (err) {
                     console.log(err);
                     callback(err, null);
                     return;
-                }else{
+                } else {
                     callback(null, result);
                     return;
                 }
             }
-        )    
+        );
     },
 };
 

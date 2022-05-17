@@ -1,34 +1,51 @@
 const memberRouter = require("express").Router();
 
 const memberCont = require("../controller/memberCont");
-const removeUndef = require("../func/removeUndefined");
+const tools = require("../func/tools");
+const mailAuth = require("../func/mailAuth");
 
-memberRouter.route("/").post((req: any, res: any) => {
-    let user = {
-        UserId: req.body.userid,
-        UserPw: req.body.userpw,
-        Email: req.body.email,
-        Name: req.body.name ? req.body.name : req.body.userid,
-        Birth: req.body.birthday ? req.body.birthday : null,
-        Keyword: [...req.body.keyword],
-    };
-    memberCont.join(user, (err: any, result: any) => {
-        if (err) {
-            console.log(err);
-            res.status(500).json({
-                status: 500,
-                errorCode: "999",
-            });
-        } else {
-            res.status(200).json({
-                status: 200,
-                errorCode: null,
-            });
-        }
-    });
+memberRouter.route("/general").post((req: any, res: any) => {
+    if (Object.keys(req.body).toString() === "email") {
+        mailAuth.sendGmail(req.body.email, (err: any, result: string) => {
+            if (err) {
+                res.status(500).json({
+                    status: 500,
+                    errorCode: "999",
+                });
+            } else {
+                res.status(200).json({
+                    status: 200,
+                    authCode: result,
+                    errorCode: null,
+                });
+            }
+        });
+    } else {
+        let user = {
+            UserId: req.body.userid,
+            UserPw: req.body.userpw,
+            Email: req.body.email,
+            Name: req.body.name ? req.body.name : req.body.userid,
+            Birth: req.body.birthday ? req.body.birthday : null,
+            Keyword: [...req.body.keyword],
+        };
+        memberCont.join(user, (err: any, result: any) => {
+            if (err) {
+                res.status(500).json({
+                    status: 500,
+                    errorCode: "999",
+                });
+            } else {
+                res.status(200).json({
+                    status: 200,
+                    errorCode: null,
+                });
+            }
+        });
+    }
 });
 
-memberRouter.route("/").get((req: any, res: any) => {
+memberRouter.route("/general").get((req: any, res: any) => {
     if (!req.query.userpw) {
         memberCont.idCheck(req.query.userid, (err: any, result: any) => {
             if (err) {
@@ -38,7 +55,6 @@ memberRouter.route("/").get((req: any, res: any) => {
                     errorCode: "999",
                 });
             } else {
-                console.log(result);
                 res.status(200).json({
                     status: 200,
                     result: result,
@@ -48,7 +64,6 @@ memberRouter.route("/").get((req: any, res: any) => {
         });
     } else {
         let user = { UserId: req.query.userid, UserPw: req.query.userpw };
-        console.log(user);
         memberCont.login(user, (err: any, result: any) => {
             if (err) {
                 res.status(500).json({
@@ -75,31 +90,72 @@ memberRouter.route("/").get((req: any, res: any) => {
     }
 });
 
-memberRouter.route("/").update((req: any, res: any) => {
+memberRouter.route("/general").put((req: any, res: any) => {
     let userFilter = {
         UserKey: req.body.userkey,
         UserId: req.body.userid,
         UserPw: req.body.userpw,
     };
 
-    let user = removeUndef({
+    let user = tools.removeUndef({
         UserPw: req.body.newPw,
         Email: req.body.newEmail,
         Name: req.body.newName,
         Birth: req.body.newBirth,
-        Keyword: [...req.body.newKeyword,],
+        Keyword: req.body.newKeyword ? [...req.body.newKeyword] : undefined,
     });
-    
-    memberCont.modify(userFilter, user, (err, result) => {
-        if(err) {
+
+    memberCont.modify(userFilter, user, (err: any, result: any) => {
+        if (err) {
             res.status(500).json({
                 status: 500,
                 errorCode: "999",
             });
-        }else{
-            
+        } else {
+            if (result.matchedCount === 0) {
+                res.status(403).json({
+                    status: 403,
+                    errorCode: "AP002",
+                });
+            } else {
+                res.status(200).json({
+                    status: 200,
+                    errorCode: null,
+                });
+            }
         }
-    })
+    });
 });
+
+memberRouter.route("/general").delete((req: any, res: any) => {
+    let user = {
+        UserKey: req.body.userkey,
+        UserId: req.body.userid,
+        UserPw: req.body.userpw,
+    };
+
+    memberCont.delete(user, (err: any, result: any) => {
+        if (err) {
+            res.status(500).json({
+                status: 500,
+                errorCode: "999",
+            });
+        } else {
+            if (result.deletedCount === 0) {
+                res.status(403).json({
+                    status: 403,
+                    errorCode: "AP002",
+                });
+            } else {
+                res.status(200).json({
+                    status: 200,
+                    errorCode: null,
+                });
+            }
+        }
+    });
+});
+
+memberRouter.route("/social").post((req: any, res: any) => {});
 
 module.exports = memberRouter;
