@@ -1,6 +1,7 @@
 const memberRouter = require("express").Router();
 
 const memberCont = require("../controller/memberCont");
+const removeUndef = require("../func/removeUndefined");
 
 memberRouter.route("/").post((req: any, res: any) => {
     let user = {
@@ -72,6 +73,33 @@ memberRouter.route("/").get((req: any, res: any) => {
             }
         });
     }
+});
+
+memberRouter.route("/").update((req: any, res: any) => {
+    let userFilter = {
+        UserKey: req.body.userkey,
+        UserId: req.body.userid,
+        UserPw: req.body.userpw,
+    };
+
+    let user = removeUndef({
+        UserPw: req.body.newPw,
+        Email: req.body.newEmail,
+        Name: req.body.newName,
+        Birth: req.body.newBirth,
+        Keyword: [...req.body.newKeyword,],
+    });
+    
+    memberCont.modify(userFilter, user, (err, result) => {
+        if(err) {
+            res.status(500).json({
+                status: 500,
+                errorCode: "999",
+            });
+        }else{
+            
+        }
+    })
 });
 
 module.exports = memberRouter;

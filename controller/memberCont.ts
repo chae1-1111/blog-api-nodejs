@@ -43,6 +43,39 @@ const memberController = {
             }
         );
     },
+
+    modify: (userFilter: any, user: any, callback: Function) => {
+        (global as any).MemberModel.updateOne(
+            {...userFilter},
+            {$set:{...user}},
+            (err: any, result: any) => {
+                if(err){
+                    console.log(err);
+                    callback(err, null);
+                    return;
+                }else{
+                    callback(null, result);
+                    return;
+                }
+            }
+        )
+    },
+    
+    delete: (user: any, callback: Function) => {
+        (global as any).MemberModel.deleteOne(
+            {...user,},
+            (err: any, result: any) => {
+                if(err){
+                    console.log(err);
+                    callback(err, null);
+                    return;
+                }else{
+                    callback(null, result);
+                    return;
+                }
+            }
+        )    
+    },
 };
 
 module.exports = memberController;
