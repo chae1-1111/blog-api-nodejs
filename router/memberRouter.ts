@@ -6,6 +6,13 @@ const mailAuth = require("../func/mailAuth");
 
 memberRouter.route("/general").post((req: any, res: any) => {
     if (Object.keys(req.body).toString() === "email") {
+        if(memberCont.emailCheck(req.body.email)) {
+            res.status(403).json({
+                status: 403,
+                errorCode: "MEM001",
+            });
+            return;
+        }
         mailAuth.sendGmail(req.body.email, (err: any, result: string) => {
             if (err) {
                 res.status(500).json({
@@ -115,7 +122,7 @@ memberRouter.route("/general").put((req: any, res: any) => {
             if (result.matchedCount === 0) {
                 res.status(403).json({
                     status: 403,
-                    errorCode: "AP002",
+                    errorCode: "MEM001",
                 });
             } else {
                 res.status(200).json({
@@ -144,7 +151,7 @@ memberRouter.route("/general").delete((req: any, res: any) => {
             if (result.deletedCount === 0) {
                 res.status(403).json({
                     status: 403,
-                    errorCode: "AP002",
+                    errorCode: "MEM001",
                 });
             } else {
                 res.status(200).json({
@@ -156,6 +163,5 @@ memberRouter.route("/general").delete((req: any, res: any) => {
     });
 });
 
-memberRouter.route("/social").post((req: any, res: any) => {});
 
 module.exports = memberRouter;

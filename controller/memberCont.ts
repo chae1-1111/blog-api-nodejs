@@ -38,10 +38,24 @@ const memberController = {
                     callback(err, null);
                     return;
                 } else {
-                    callback(null, result.length == 0 ? true : false);
+                    callback(null, result.length === 0 ? true : false);
                 }
             }
         );
+    },
+
+    emailCheck: (email: string, callback: Function) => {
+        (global as any).MemberModel.find(
+            {Email: email},
+            (err: any, result: any) => {
+                if(err){
+                    console.log(err);
+                    callback(err, null);
+                }else{
+                    callback(null, result.length === 0 ? true : false);
+                }
+            }
+        )
     },
 
     modify: (userFilter: any, user: any, callback: Function) => {

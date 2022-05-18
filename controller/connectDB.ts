@@ -32,6 +32,22 @@ const connectDB = () => {
             { versionKey: false }
         );
 
+        (global as any).PostSchema = mongoose.Schema(
+            {
+                PostKey: Number,
+                Title: String,
+                Description: String,
+                Keyword: [],
+                UserKey: Number,
+                UserId: String,
+                Name: String,
+                Created: Date,
+                Views: Number,
+                Likes: Number,
+            },
+            { versionKey: false }
+        );
+
         (global as any).MemberSchema.plugin(autoIncrement, {
             inc_field: "UserKey",
         });
