@@ -6,7 +6,7 @@ const mailAuth = require("../func/mailAuth");
 
 memberRouter.route("/general").post((req: any, res: any) => {
     if (Object.keys(req.body).toString() === "email") {
-        if(memberCont.emailCheck(req.body.email)) {
+        if (memberCont.emailCheck(req.body.email)) {
             res.status(403).json({
                 status: 403,
                 errorCode: "MEM001",
@@ -104,14 +104,14 @@ memberRouter.route("/general").put((req: any, res: any) => {
         UserPw: req.body.userpw,
     };
 
-    let user = tools.removeUndef({
+    let user = tools.removeUndefined({
         UserPw: req.body.newPw,
         Email: req.body.newEmail,
         Name: req.body.newName,
         Birth: req.body.newBirth,
         Keyword: req.body.newKeyword ? [...req.body.newKeyword] : undefined,
     });
-
+    console.log(user);
     memberCont.modify(userFilter, user, (err: any, result: any) => {
         if (err) {
             res.status(500).json({
@@ -162,6 +162,5 @@ memberRouter.route("/general").delete((req: any, res: any) => {
         }
     });
 });
-
 
 module.exports = memberRouter;

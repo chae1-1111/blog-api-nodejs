@@ -14,7 +14,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(logger("dev"));
 
-app.all("/member", (req: any, res: any, next: any) => {
+app.all("*", (req: any, res: any, next: any) => {
     const apikey: string = req.headers.authorization;
     if (!auth(apikey)) {
         res.status(403).json({
@@ -27,6 +27,7 @@ app.all("/member", (req: any, res: any, next: any) => {
 });
 
 app.use("/member", require("./router/memberRouter"));
+app.use("/post", require("./router/postRouter"));
 
 app.listen(port, () => {
     console.log(`Running server with port ${port}`);

@@ -38,8 +38,8 @@ const connectDB = () => {
                 Title: String,
                 Description: String,
                 Keyword: [],
+                Category: String,
                 UserKey: Number,
-                UserId: String,
                 Name: String,
                 Created: Date,
                 Views: Number,
@@ -55,6 +55,15 @@ const connectDB = () => {
         (global as any).MemberModel = mongoose.model(
             "member",
             (global as any).MemberSchema
+        );
+
+        (global as any).PostSchema.plugin(autoIncrement, {
+            inc_field: "PostKey",
+        });
+
+        (global as any).PostModel = mongoose.model(
+            "post",
+            (global as any).PostSchema
         );
     });
 };
