@@ -27,8 +27,26 @@ postRouter.route("/").post((req: any, res: any) => {
     });
 });
 
-postRouter.route("/:userkey").get((req: any, res: any) => {
+postRouter.route("/list/:userkey").get((req: any, res: any) => {
     postCont.getAllPost(req.params.userkey, (err: any, result: any) => {
+        if (err) {
+            res.status(500).json({
+                status: 500,
+                errorCode: "999",
+            });
+        } else {
+            res.status(200).json({
+                status: 200,
+                errorCode: null,
+                data: result,
+            });
+        }
+    });
+});
+
+postRouter.route("/:postkey").get((req: any, res: any) => {
+    postCont.view(req.params.postkey);
+    postCont.getPost(req.params.postkey, (err: any, result: any) => {
         if (err) {
             res.status(500).json({
                 status: 500,
