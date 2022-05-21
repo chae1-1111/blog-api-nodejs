@@ -17,6 +17,8 @@ const connectDB = () => {
     );
     (global as any).database.on("open", () => {
         console.log("Connect Database!");
+
+        // 회원 관련 스키마
         (global as any).MemberSchema = mongoose.Schema(
             {
                 UserKey: Number,
@@ -32,6 +34,7 @@ const connectDB = () => {
             { versionKey: false }
         );
 
+        // 게시글 관련 스키마
         (global as any).PostSchema = mongoose.Schema(
             {
                 PostKey: Number,
@@ -41,6 +44,7 @@ const connectDB = () => {
                 Category: String,
                 UserKey: Number,
                 Name: String,
+                UserId: String,
                 Created: Date,
                 Views: Number,
                 Likes: Number,
@@ -48,6 +52,16 @@ const connectDB = () => {
             { versionKey: false }
         );
 
+        // 추천 스키마
+        (global as any).LikeSchema = mongoose.Schema(
+            {
+                PostKey: Number,
+                UserKey: Number,
+            },
+            { versionKey: false }
+        );
+
+        // 유저키 자동 증가
         (global as any).MemberSchema.plugin(autoIncrement, {
             inc_field: "UserKey",
         });
@@ -57,6 +71,7 @@ const connectDB = () => {
             (global as any).MemberSchema
         );
 
+        // 게시글키 자동 증가
         (global as any).PostSchema.plugin(autoIncrement, {
             inc_field: "PostKey",
         });
@@ -64,6 +79,11 @@ const connectDB = () => {
         (global as any).PostModel = mongoose.model(
             "post",
             (global as any).PostSchema
+        );
+
+        (global as any).LikeModel = mongoose.model(
+            "like",
+            (global as any).LikeSchema
         );
     });
 };
