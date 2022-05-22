@@ -42,8 +42,9 @@ export const PostSchema = new Schema<Post>({
     Name: { type: String, require: true },
     UserId: { type: String, require: true },
     Created: { type: Date, default: Date.now, require: true },
-    Views: { type: Number, defualt: 0, require: true },
-    Likes: { type: Number, defualt: 0, require: true },
+    Views: { type: Number, default: 0, require: true },
+    Likes: { type: Number, default: 0, require: true },
+    Replys: { type: Number, default: 0, require: true },
 });
 
 // PostKey 자동증가
@@ -52,6 +53,7 @@ PostSchema.plugin(autoIncrement, { inc_field: "PostKey" });
 // 게시글 모델
 export const PostModel = model<Post>("post", PostSchema);
 
+// 댓글 관련 스키마
 export const ReplySchema = new Schema<Reply>({
     PostKey: { type: Number, require: true },
     ReplyKey: { type: Number, unique: true, require: true },
@@ -59,7 +61,7 @@ export const ReplySchema = new Schema<Reply>({
     Group: {
         type: Number,
         require: true,
-        default: function (): number {
+        default: function (): Number {
             return this.ReplyKey;
         },
     },
@@ -67,14 +69,17 @@ export const ReplySchema = new Schema<Reply>({
     UserKey: Number,
     Name: String,
     UserId: String,
+    Deleted: { type: Boolean, default: false, require: true },
     Created: { type: Date, default: Date.now },
 });
 
 // ReplyKey 자동증가
 ReplySchema.plugin(autoIncrement, { inc_field: "ReplyKey" });
 
+// 댓글 모델
 export const ReplyModel = model<Reply>("reply", ReplySchema);
 
+// 추천 스키마
 export const LikeSchema = new Schema<Like>({
     PostKey: { type: Number, require: true },
     UserKey: { type: Number, require: true },

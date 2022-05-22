@@ -1,4 +1,5 @@
 import { Schema, model, connect } from "mongoose";
+import { NumberLiteralType } from "typescript";
 
 export interface User {
     UserKey: Number;
@@ -24,17 +25,19 @@ export interface Post {
     Created: Date;
     Views: Number;
     Likes: Number;
+    Replys: Number;
 }
 
 export interface Reply {
     ReplyKey: Number;
     PostKey: Number;
-    UserKey: Number;
+    UserKey?: Number;
     Group: Number;
-    Content: String;
-    UserId: String;
-    Name: String;
-    Created: Date;
+    Content?: String;
+    UserId?: String;
+    Name?: String;
+    Created?: Date;
+    Deleted: Boolean;
 }
 
 export interface Like {
@@ -100,4 +103,34 @@ export interface modifyPostForm {
     Description?: String;
     Keyword?: Array<String>;
     Category?: String;
+}
+
+export interface replyForm {
+    UserKey: Number;
+    PostKey: Number;
+    Group?: Number;
+    Content: String;
+    UserId: String;
+    Name: String;
+}
+
+export interface replyListForm {
+    PostKey: Number;
+    ReplyKey: Number;
+    Group: Number;
+    Content?: String;
+    UserId?: String;
+    Name?: String;
+    isWriter: Boolean;
+    Deleted: Boolean;
+}
+
+export interface replyFilterForm {
+    PostKey: Number;
+    UserKey: Number;
+    ReplyKey: Number;
+}
+
+export interface modifyReplyForm {
+    Content: String;
 }

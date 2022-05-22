@@ -5,11 +5,15 @@ import {
     decLikes,
     getAllPost,
     getOnePost,
+    getReplyList,
     incLikes,
     incViews,
     modifyPost,
+    modifyReply,
     registPost,
+    registReply,
     removePost,
+    removeReply,
 } from "../controller/postCont";
 import { getUser, isOwner } from "../controller/memberCont";
 import { isLiker, like, unlike } from "../controller/likeCont";
@@ -23,6 +27,8 @@ import {
     postFilterForm,
     postForm,
     postListForm,
+    replyFilterForm,
+    replyForm,
 } from "../interfaces";
 
 // 게시글 등록
@@ -95,7 +101,7 @@ postRouter.route("/list/:userid").get(async (req: any, res: any) => {
 });
 
 // 게시글 상세
-postRouter.route("/:postkey").get(async (req: any, res: any) => {
+postRouter.route("/detail/:postkey").get(async (req: any, res: any) => {
     try {
         // 게시글 조회수 증가
         await incViews(req.params.postkey);
@@ -192,11 +198,9 @@ postRouter.route("/").delete(async (req: any, res: any) => {
 });
 
 // 게시글 추천
-postRouter.route("/:like").put(async (req: any, res: any) => {
+postRouter.route("/like").put(async (req: any, res: any) => {
     try {
-        if (req.params.like === "like") {
-            // "/post/like" 요청인 경우 추천수 증가
-
+        if (req.body.like === "like") {
             // 게시글 정보 내 추천수 증가
             await incLikes(req.body.postkey);
 
@@ -205,7 +209,7 @@ postRouter.route("/:like").put(async (req: any, res: any) => {
                 UserKey: req.body.userkey,
                 PostKey: req.body.postkey,
             });
-        } else if (req.params.like === "unlike") {
+        } else if (req.body.like === "unlike") {
             // "/post/unlike" 요청인 경우 추천수 증가
 
             // 게시글 정보 내 추천수 감소
@@ -227,6 +231,111 @@ postRouter.route("/:like").put(async (req: any, res: any) => {
             status: 200,
             errorCode: null,
         });
+    } catch (err) {
+        res.status(500).json({
+            status: 500,
+            errorCode: "999",
+        });
+    }
+});
+
+// 댓글 작성
+postRouter.route("/reply").post(async (req: any, res: any) => {
+    try {
+        let user = await getUser(req.body.userkey);
+        if (!user) {
+            res.status(201).json({
+                status: 201,
+                errorCode: "MEM001",
+            });
+            return;
+        }
+        let data: replyForm = removeUndefined({
+            UserKey: req.body.userkey,
+            PostKey: req.body.postkey,
+            Group: req.body.postkey,
+            Content: req.body.content,
+            UserId: user.UserId,
+            Name: user.Name,
+        });
+        await registReply(data);
+        res.status(200).json({
+            status: 200,
+            errorCode: null,
+        });
+    } catch (err) {
+        res.status(500).json({
+            status: 500,
+            errorCode: "999",
+        });
+    }
+});
+
+// 댓글 리스트 조회
+postRouter.route("/reply").get(async (req: any, res: any) => {
+    try {
+        let result = await getReplyList(req.query.postkey, req.query.userkey);
+        res.status(200).json({
+            status: 200,
+            errorCode: null,
+            data: result,
+        });
+    } catch (err) {
+        res.status(500).json({
+            status: 500,
+            errorCode: "999",
+        });
+    }
+});
+
+// 댓글 수정
+postRouter.route("/reply").put(async (req: any, res: any) => {
+    try {
+        let filter: replyFilterForm = {
+            PostKey: req.body.postkey,
+            UserKey: req.body.userkey,
+            ReplyKey: req.body.replykey,
+        };
+        let result = await modifyReply(filter, { Content: req.body.content });
+        if (result) {
+            res.status(200).json({
+                status: 200,
+                errorCode: null,
+            });
+        } else {
+            res.status(201).json({
+                status: 201,
+                errorCode: "MEM001",
+            });
+        }
+    } catch (err) {
+        res.status(500).json({
+            status: 500,
+            errorCode: "999",
+        });
+    }
+});
+
+// 댓글 삭제
+postRouter.route("/reply").delete(async (req: any, res: any) => {
+    try {
+        let filter: replyFilterForm = {
+            PostKey: req.body.postkey,
+            UserKey: req.body.userkey,
+            ReplyKey: req.body.replykey,
+        };
+        let result = await removeReply(filter);
+        if (result) {
+            res.status(200).json({
+                status: 200,
+                errorCode: null,
+            });
+        } else {
+            res.status(201).json({
+                status: 201,
+                errorCode: "MEM001",
+            });
+        }
     } catch (err) {
         res.status(500).json({
             status: 500,

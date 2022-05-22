@@ -1,10 +1,14 @@
-import { PostModel } from "./connectDB";
+import { PostModel, ReplyModel } from "./connectDB";
 
 import {
     modifyPostForm,
+    modifyReplyForm,
     postFilterForm,
     postForm,
     postListForm,
+    replyFilterForm,
+    replyForm,
+    replyListForm,
 } from "../interfaces";
 
 // 게시글 등록
@@ -45,7 +49,7 @@ export const getAllPost: Function = async (
 };
 
 // 조회수 증가
-export const incViews: Function = async (postkey: number): Promise<boolean> => {
+export const incViews: Function = async (postkey: Number): Promise<Boolean> => {
     return new Promise(async (resolve, reject) => {
         try {
             await PostModel.updateOne(
@@ -99,7 +103,7 @@ export const getOnePost: Function = async (
 export const modifyPost: Function = async (
     filter: postFilterForm,
     data: modifyPostForm
-): Promise<boolean> => {
+): Promise<Boolean> => {
     return new Promise(async (resolve, reject) => {
         try {
             let result = await PostModel.updateOne(
@@ -118,7 +122,7 @@ export const modifyPost: Function = async (
 // 게시글 삭제
 export const removePost: Function = async (
     data: postFilterForm
-): Promise<boolean> => {
+): Promise<Boolean> => {
     return new Promise(async (resolve, reject) => {
         try {
             let result = await PostModel.deleteOne({
@@ -134,7 +138,7 @@ export const removePost: Function = async (
 };
 
 // 게시글 추천
-export const incLikes: Function = async (postkey: Number): Promise<boolean> => {
+export const incLikes: Function = async (postkey: Number): Promise<Boolean> => {
     return new Promise(async (resolve, reject) => {
         try {
             await PostModel.updateOne(
@@ -151,7 +155,7 @@ export const incLikes: Function = async (postkey: Number): Promise<boolean> => {
 };
 
 // 게시글 비추천
-export const decLikes: Function = async (postkey: Number): Promise<boolean> => {
+export const decLikes: Function = async (postkey: Number): Promise<Boolean> => {
     return new Promise(async (resolve, reject) => {
         try {
             await PostModel.updateOne(
@@ -160,6 +164,105 @@ export const decLikes: Function = async (postkey: Number): Promise<boolean> => {
                 { $inc: { Likes: -1 } }
             );
             resolve(true);
+        } catch (err) {
+            console.log(err);
+            reject();
+        }
+    });
+};
+
+// 댓글 작성
+export const registReply: Function = async (
+    data: replyForm
+): Promise<Boolean> => {
+    return new Promise(async (resolve, reject) => {
+        let reply = new ReplyModel({
+            ...data,
+        });
+        try {
+            // 댓글 정보 저장
+            await reply.save();
+            // 게시글 댓글 수 증가
+            await PostModel.updateOne(
+                { PostKey: data.PostKey },
+                { $inc: { Replys: 1 } }
+            );
+            resolve(true);
+        } catch (err) {
+            console.log(err);
+            reject();
+        }
+    });
+};
+
+export const getReplyList: Function = async (
+    postkey: Number,
+    userkey: Number
+): Promise<replyListForm[]> => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let data = await ReplyModel.find(
+                { PostKey: postkey },
+                "-_id ReplyKey Group Content UserId Name Deleted UserKey"
+            );
+            let result: replyListForm[] = [];
+            data.forEach((reply) => {
+                let temp = {
+                    PostKey: reply.PostKey,
+                    ReplyKey: reply.ReplyKey,
+                    Group: reply.Group,
+                    Content: reply.Content,
+                    UserId: reply.UserId,
+                    Name: reply.Name,
+                    Deleted: reply.Deleted,
+                    isWriter: reply.UserKey == userkey ? true : false,
+                };
+                result.push(temp);
+            });
+            resolve(result);
+        } catch (err) {
+            console.log(err);
+            reject();
+        }
+    });
+};
+
+export const modifyReply: Function = async (
+    replyFilter: replyFilterForm,
+    data: modifyReplyForm
+): Promise<Boolean> => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let result = await ReplyModel.updateOne(
+                { ...replyFilter },
+                { $set: { ...data } }
+            );
+            resolve(result.matchedCount === 0 ? false : true);
+        } catch (err) {
+            console.log(err);
+            reject();
+        }
+    });
+};
+
+export const removeReply: Function = async (
+    replyFilter: replyFilterForm
+): Promise<Boolean> => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let result = await ReplyModel.updateOne(replyFilter, {
+                $unset: {
+                    Content: 1,
+                    UserKey: 1,
+                    Name: 1,
+                    UserId: 1,
+                    Created: 1,
+                },
+                $set: {
+                    Deleted: true,
+                },
+            });
+            resolve(result.matchedCount === 0 ? false : true);
         } catch (err) {
             console.log(err);
             reject();
