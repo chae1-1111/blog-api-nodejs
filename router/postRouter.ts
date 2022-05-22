@@ -1,18 +1,35 @@
-const postRouter = require("express").Router();
+export const postRouter = require("express").Router();
 
-// Controller
-const postCont = require("../controller/postCont");
-const memCont = require("../controller/memberCont");
-const likeCont = require("../controller/likeCont");
+// controllers
+import {
+    decLikes,
+    getAllPost,
+    getOnePost,
+    incLikes,
+    incViews,
+    modifyPost,
+    registPost,
+    removePost,
+} from "../controller/postCont";
+import { getUser, isOwner } from "../controller/memberCont";
+import { isLiker, like, unlike } from "../controller/likeCont";
 
-// Tools
-const postTools = require("../func/tools");
+import { removeUndefined } from "../func/tools";
+
+// interfaces
+import {
+    Like,
+    modifyPostForm,
+    postFilterForm,
+    postForm,
+    postListForm,
+} from "../interfaces";
 
 // 게시글 등록
 postRouter.route("/").post(async (req: any, res: any) => {
     try {
         // 사용자 정보 가져오기(userid, name)
-        let user = await memCont.getUser(req.body.userkey);
+        let user = await getUser(req.body.userkey);
         if (!user) {
             // 일치하는 사용자 없음
             res.status(201).json({
@@ -21,7 +38,7 @@ postRouter.route("/").post(async (req: any, res: any) => {
             });
             return;
         }
-        let post = {
+        let post: postForm = {
             Title: req.body.title,
             Description: req.body.descrition,
             Keyword: [...req.body.keyword],
@@ -32,7 +49,7 @@ postRouter.route("/").post(async (req: any, res: any) => {
         };
         try {
             // 게시글 등록
-            let postkey = await postCont.regist(post);
+            let postkey: Number = await registPost(post);
             res.status(200).json({
                 status: 200,
                 postkey: postkey,
@@ -56,10 +73,13 @@ postRouter.route("/").post(async (req: any, res: any) => {
 postRouter.route("/list/:userid").get(async (req: any, res: any) => {
     try {
         // 블로그 소유자 여부
-        let owner = await memCont.isOwner(req.params.userid, req.query.userkey);
+        let owner: Boolean = await isOwner(
+            req.params.userid,
+            req.query.userkey
+        );
 
         // 게시글 정보
-        let result = await postCont.getAllPost(req.params.userid);
+        let result: postListForm[] = await getAllPost(req.params.userid);
         res.status(200).json({
             status: 200,
             errorCode: null,
@@ -78,20 +98,22 @@ postRouter.route("/list/:userid").get(async (req: any, res: any) => {
 postRouter.route("/:postkey").get(async (req: any, res: any) => {
     try {
         // 게시글 조회수 증가
-        await postCont.view(req.params.postkey);
+        await incViews(req.params.postkey);
+
+        let data: Like = {
+            UserKey: req.query.userkey,
+            PostKey: req.params.postkey,
+        };
 
         // 게시글 정보, 게시글 작성자 여부
-        let result = await postCont.getPost(
-            req.params.postkey,
-            req.query.userkey
-        );
+        let result = await getOnePost(req.params.postkey, req.query.userkey);
         // 게시글 기추천 여부
-        let isLiker = await likeCont.isLiker();
+        let like = await isLiker(data);
 
         res.status(200).json({
             status: 200,
             errorCode: null,
-            data: { ...result, isLiker: isLiker },
+            data: { ...result, isLiker: like },
         });
     } catch (err) {
         res.status(500).json({
@@ -104,13 +126,13 @@ postRouter.route("/:postkey").get(async (req: any, res: any) => {
 // 게시글 수정
 postRouter.route("/").put(async (req: any, res: any) => {
     // 게시글 기본 정보
-    let filter = {
+    let filter: postFilterForm = {
         PostKey: req.body.postkey,
         UserKey: req.body.userkey,
     };
 
     // 수정할 데이터, undefined 제거
-    let data = postTools.removeUndefined({
+    let data: modifyPostForm = removeUndefined({
         Title: req.body.title,
         Description: req.body.description,
         Keyword: [...req.body.keyword],
@@ -118,7 +140,7 @@ postRouter.route("/").put(async (req: any, res: any) => {
     });
 
     try {
-        let result = await postCont.modify(filter, data);
+        let result: Boolean = await modifyPost(filter, data);
         if (!result) {
             // 일치하는 게시글 정보 없음
             res.status(201).json({
@@ -142,12 +164,12 @@ postRouter.route("/").put(async (req: any, res: any) => {
 
 // 게시글 삭제
 postRouter.route("/").delete(async (req: any, res: any) => {
-    let data = {
+    let data: postFilterForm = {
         PostKey: req.body.postkey,
         UserKey: req.body.userkey,
     };
     try {
-        let result = await postCont.remove(data);
+        let result: Boolean = await removePost(data);
         if (!result) {
             // 일치하는 게시글 없음
             res.status(201).json({
@@ -176,10 +198,10 @@ postRouter.route("/:like").put(async (req: any, res: any) => {
             // "/post/like" 요청인 경우 추천수 증가
 
             // 게시글 정보 내 추천수 증가
-            await postCont.like(req.body.postkey);
+            await incLikes(req.body.postkey);
 
             // 추천 스키마에 추가
-            await likeCont.like({
+            await like({
                 UserKey: req.body.userkey,
                 PostKey: req.body.postkey,
             });
@@ -187,10 +209,10 @@ postRouter.route("/:like").put(async (req: any, res: any) => {
             // "/post/unlike" 요청인 경우 추천수 증가
 
             // 게시글 정보 내 추천수 감소
-            await postCont.unlike(req.body.postkey);
+            await decLikes(req.body.postkey);
 
             // 추천 스키마에서 제거
-            await likeCont.unlike({
+            await unlike({
                 UserKey: req.body.userkey,
                 PostKey: req.body.postkey,
             });
@@ -212,5 +234,3 @@ postRouter.route("/:like").put(async (req: any, res: any) => {
         });
     }
 });
-
-module.exports = postRouter;

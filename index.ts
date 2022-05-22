@@ -3,13 +3,14 @@ const bodyParser = require("body-parser");
 const logger = require("morgan");
 const cors = require("cors");
 
-const connDB = require("./controller/connectDB");
+import { memberRouter } from "./router/memberRouter";
+import { postRouter } from "./router/postRouter";
+
+import { connDB } from "./controller/connectDB";
+import { auth } from "./auth/auth";
 
 const app = express();
 const port = 3000;
-
-// apikey 인증 메소드
-const auth = require("./auth/auth.ts");
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -32,8 +33,8 @@ app.all("*", (req: any, res: any, next: any) => {
 });
 
 // 라우터 정보
-app.use("/member", require("./router/memberRouter"));
-app.use("/post", require("./router/postRouter"));
+app.use("/member", memberRouter);
+app.use("/post", postRouter);
 
 app.listen(port, () => {
     console.log(`Running server with port ${port}`);
