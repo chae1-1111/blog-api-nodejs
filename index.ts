@@ -12,7 +12,7 @@ import { auth } from "./auth/auth";
 const app = express();
 const port = 3000;
 
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(logger("dev"));
 
@@ -20,6 +20,13 @@ app.use(logger("dev"));
 app.use(cors());
 
 app.all("*", (req: any, res: any, next: any) => {
+    res.header("Access-Control-Allow-Origin", "*");
+
+    res.header(
+        "Access-Control-Allow-Headers",
+        "Origin, X-Requested-With, Content-Type, Accept"
+    );
+
     // 모든 요청에 대해 apikey 인증 확인
     const apikey: string = req.headers.authorization;
     if (!auth(apikey)) {
@@ -38,6 +45,5 @@ app.use("/post", postRouter);
 
 app.listen(port, () => {
     console.log(`Running server with port ${port}`);
-    // db 연결
-    connDB();
+    connDB(); // db 연결
 });
