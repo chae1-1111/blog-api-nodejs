@@ -10,6 +10,7 @@ export interface User {
     Name: String;
     Birth?: String;
     Keyword: Array<String>;
+    Salt: String;
     Created: Date;
 }
 

@@ -1,3 +1,5 @@
+const crypto = require("crypto");
+
 import { UserModel } from "./connectDB";
 
 // interfaces
@@ -8,13 +10,23 @@ import {
     userFilterForm,
 } from "../interfaces";
 
+const encrypt: Function = (password, salt) => {
+    return crypto
+        .createHash("sha512")
+        .update(password + salt)
+        .digest("hex");
+};
+
 // 회원가입
 export const joinUser: Function = async (
     user: joinUserForm
 ): Promise<boolean> => {
     return new Promise(async (resolve, reject) => {
+        const salt = Math.round(new Date().valueOf() * Math.random()) + "";
         const User = new UserModel({
             ...user,
+            UserPw: encrypt(user.UserPw, salt),
+            Salt: salt,
             // 일반회원
             UserType: "mem0001",
         });
@@ -32,7 +44,14 @@ export const joinUser: Function = async (
 export const login: Function = async (user: loginForm) => {
     return new Promise(async (resolve, reject) => {
         try {
-            let result = await UserModel.find({ ...user }, "-_id UserKey Name");
+            let salt = await UserModel.findOne(
+                { UserId: user.UserId },
+                "-_id Salt"
+            )[0].Salt;
+            let result = await UserModel.find(
+                { UserId: user.UserId, UserPw: encrypt(user.UserPw, salt) },
+                "-_id UserKey Name"
+            );
             resolve(result.length !== 0 ? result[0] : false);
         } catch (err) {
             console.log(err);

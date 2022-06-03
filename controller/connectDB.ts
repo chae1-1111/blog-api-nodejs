@@ -22,6 +22,7 @@ export const UserSchema = new Schema<User>({
     },
     Birth: { type: String },
     Keyword: { type: [String], require: true },
+    Salt: { type: String, require: true },
     Created: { type: Date, default: Date.now, require: true },
 });
 
