@@ -98,9 +98,25 @@ export const modifyUser: Function = async (
 ): Promise<boolean> => {
     return new Promise(async (resolve, reject) => {
         try {
+            let temp = await UserModel.find(
+                { UserId: userFilter.UserId },
+                "-_id Salt"
+            );
+            let salt = temp[0].Salt;
+            let newSalt = Math.round(new Date().valueOf() * Math.random()) + "";
+
             let result = await UserModel.updateOne(
-                { ...userFilter },
-                { $set: { ...user } }
+                {
+                    ...userFilter,
+                    UserPw: encrypt(userFilter.UserPw, salt),
+                },
+                {
+                    $set: {
+                        ...user,
+                        UserPw: encrypt(user.UserPw, newSalt),
+                        Salt: newSalt,
+                    },
+                }
             );
             // 일치하는 사용자 정보 없으면 false
             resolve(result.matchedCount === 0 ? false : true);
@@ -117,8 +133,15 @@ export const deleteUser: Function = async (
 ): Promise<boolean> => {
     return new Promise(async (resolve, reject) => {
         try {
+            let temp = await UserModel.find(
+                { UserId: user.UserId },
+                "-_id Salt"
+            );
+            let salt = temp[0].Salt;
+
             let result = await UserModel.deleteOne({
                 ...user,
+                UserPw: encrypt(user.UserPw, salt),
             });
             // 일치하는 사용자 정보 없으면 false
             resolve(result.deletedCount === 0 ? false : true);
