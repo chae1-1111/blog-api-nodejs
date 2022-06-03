@@ -10,7 +10,7 @@ import {
     userFilterForm,
 } from "../interfaces";
 
-const encrypt: Function = (password, salt) => {
+const encrypt: Function = (password: string, salt: string) => {
     return crypto
         .createHash("sha512")
         .update(password + salt)
@@ -44,11 +44,12 @@ export const joinUser: Function = async (
 export const login: Function = async (user: loginForm) => {
     return new Promise(async (resolve, reject) => {
         try {
-            let salt = await UserModel.findOne(
+            let result = await UserModel.find(
                 { UserId: user.UserId },
                 "-_id Salt"
-            )[0].Salt;
-            let result = await UserModel.find(
+            );
+            let salt = result[0].Salt;
+            result = await UserModel.find(
                 { UserId: user.UserId, UserPw: encrypt(user.UserPw, salt) },
                 "-_id UserKey Name"
             );
