@@ -1,3 +1,5 @@
 /node_modules
 /auth
 /config
+
+/func/encrypt.ts

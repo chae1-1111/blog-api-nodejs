@@ -1,6 +1,5 @@
-const crypto = require("crypto");
-
 import { UserModel } from "./connectDB";
+import { encrypt } from "../func/encrypt";
 
 // interfaces
 import {
@@ -9,13 +8,6 @@ import {
     modifyUserForm,
     userFilterForm,
 } from "../interfaces";
-
-const encrypt: Function = (password: string, salt: string) => {
-    return crypto
-        .createHash("sha512")
-        .update(password + salt)
-        .digest("hex");
-};
 
 // 회원가입
 export const joinUser: Function = async (
