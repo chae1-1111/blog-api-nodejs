@@ -40,6 +40,7 @@ export const login: Function = async (user: loginForm) => {
                 { UserId: user.UserId },
                 "-_id Salt"
             );
+            if (result.length === 0) resolve(false);
             let salt = result[0].Salt;
             result = await UserModel.find(
                 { UserId: user.UserId, UserPw: encrypt(user.UserPw, salt) },
@@ -102,6 +103,7 @@ export const modifyUser: Function = async (
                 { UserId: userFilter.UserId },
                 "-_id Salt"
             );
+            if (temp.length === 0) resolve(false);
             let salt = temp[0].Salt;
             let newSalt = Math.round(new Date().valueOf() * Math.random()) + "";
 
@@ -137,6 +139,7 @@ export const deleteUser: Function = async (
                 { UserId: user.UserId },
                 "-_id Salt"
             );
+            if (temp.length === 0) resolve(false);
             let salt = temp[0].Salt;
 
             let result = await UserModel.deleteOne({
