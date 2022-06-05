@@ -19,6 +19,14 @@ app.use(logger("dev"));
 // cors 허용
 app.use(cors());
 
+const router = express.Router();
+router.route("/").get((req: any, res: any) => {
+    res.write("test");
+    res.end();
+});
+
+app.use("/test", router);
+
 app.all("*", (req: any, res: any, next: any) => {
     res.header("Access-Control-Allow-Origin", "*");
 
