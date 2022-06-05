@@ -25,6 +25,11 @@ router.route("/").get((req: any, res: any) => {
     res.end();
 });
 
+router.route("/health").get((req: any, res: any) => {
+    res.status(200).send("OK");
+    res.end();
+});
+
 app.use("/test", router);
 
 app.all("*", (req: any, res: any, next: any) => {
