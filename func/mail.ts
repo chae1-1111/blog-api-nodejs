@@ -61,10 +61,7 @@ export const idInquery: Function = async (
             from: user,
             to: email,
             subject: "블로그 아이디 찾기",
-            html:
-                "<p>아이디 : " +
-                userid +
-                "입니다.</p><a href='localhost:3000'><input type='button' value='로그인하러가기'/></a>",
+            text: "아이디 : " + userid + "입니다.",
         };
         try {
             await transporter.sendMail(mailOptions);
