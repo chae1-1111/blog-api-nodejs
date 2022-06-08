@@ -64,7 +64,7 @@ export const idInquery: Function = async (
             html:
                 "<p>아이디 : " +
                 userid +
-                "입니다.</p><a href='localhost:3000'><input type='button' value='로그인하러가기'/></a>",
+                "입니다.</p><a href='http://localhost:3000/login'><input type='button' value='로그인하러가기'/></a>",
         };
         try {
             await transporter.sendMail(mailOptions);
