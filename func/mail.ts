@@ -39,7 +39,7 @@ export const auth: Function = async (email: String): Promise<String> => {
     });
 };
 
-export const idInquery: Function = async (
+export const idInquiry: Function = async (
     email: String,
     userid: String
 ): Promise<boolean> => {
@@ -75,4 +75,3 @@ export const idInquery: Function = async (
         }
     });
 };
-

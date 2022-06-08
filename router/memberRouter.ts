@@ -21,7 +21,7 @@ import {
 
 // Tools
 import { removeUndefined } from "../func/tools";
-import { auth, idInquery } from "../func/mail";
+import { auth, idInquiry } from "../func/mail";
 
 // 메일 인증
 memberRouter.route("/general/email").post(async (req: any, res: any) => {
@@ -207,7 +207,7 @@ memberRouter.route("/general").delete(async (req: any, res: any) => {
     }
 });
 
-memberRouter.route("/idInquery").get(async (req: any, res: any) => {
+memberRouter.route("/idInquiry").get(async (req: any, res: any) => {
     try {
         let result: String = await getUserid(req.query.email);
         if (result === "") {
@@ -219,7 +219,7 @@ memberRouter.route("/idInquery").get(async (req: any, res: any) => {
         } else {
             // 일치하는 사용자 있음
             try {
-                await idInquery(req.query.email, result);
+                await idInquiry(req.query.email, result);
                 res.status(200).json({
                     status: 200,
                     errorCode: null,
