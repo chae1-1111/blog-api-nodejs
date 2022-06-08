@@ -4,6 +4,7 @@ export const memberRouter = require("express").Router();
 import {
     deleteUser,
     emailCheck,
+    getUserid,
     idCheck,
     joinUser,
     login,
@@ -20,7 +21,7 @@ import {
 
 // Tools
 import { removeUndefined } from "../func/tools";
-import { sendGmail } from "../func/mailAuth";
+import { auth, idInquery } from "../func/mail";
 
 // 메일 인증
 memberRouter.route("/general/email").post(async (req: any, res: any) => {
@@ -38,7 +39,7 @@ memberRouter.route("/general/email").post(async (req: any, res: any) => {
 
         try {
             // 이메일 발송
-            let authCode: String = await sendGmail(req.body.email);
+            let authCode: String = await auth(req.body.email);
             res.status(200).json({
                 status: 200,
                 // 메일로 발송한 인증코드
@@ -197,6 +198,42 @@ memberRouter.route("/general").delete(async (req: any, res: any) => {
                 status: 200,
                 errorCode: null,
             });
+        }
+    } catch (err) {
+        res.status(500).json({
+            status: 500,
+            errorCode: "999",
+        });
+    }
+});
+
+memberRouter.route("/idInquery").get(async (req: any, res: any) => {
+    try {
+        let result: String = await getUserid(req.query.email);
+        if (result === "") {
+            // 일치하는 사용자 없음
+            res.status(201).json({
+                status: 201,
+                errorCode: "MEM001",
+            });
+        } else {
+            // 일치하는 사용자 있음
+            try {
+                let result: String = await idInquery(
+                    req.body.email,
+                    req.body.userid
+                );
+
+                res.status(200).json({
+                    status: 200,
+                    errorCode: null,
+                });
+            } catch (err) {
+                res.status(500).json({
+                    status: 500,
+                    errorCode: "999",
+                });
+            }
         }
     } catch (err) {
         res.status(500).json({

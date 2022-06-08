@@ -191,3 +191,37 @@ export const isOwner: Function = async (
         }
     });
 };
+
+// 아이디 찾기
+export const getUserid: Function = async (email: String): Promise<String> => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let result = await UserModel.find({ Email: email }, "-_id UserId");
+            // 일치하는 사용자 없으면 false
+            resolve(result.length === 0 ? "" : result[0].UserId);
+        } catch (err) {
+            console.log(err);
+            reject();
+        }
+    });
+};
+
+// 비밀번호 찾기
+export const getUserPw: Function = async (
+    userid: String,
+    email: String
+): Promise<Boolean> => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let result = await UserModel.find(
+                { UserId: userid, Email: email },
+                "_id"
+            );
+            // 일치하는 사용자 없으면 false
+            resolve(result.length === 0 ? false : true);
+        } catch (err) {
+            console.log(err);
+            reject();
+        }
+    });
+};

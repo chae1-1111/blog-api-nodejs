@@ -3,10 +3,7 @@ const nodemailer = require("nodemailer");
 // 메일 계정 정보
 import { user, pass } from "../config/mailSenderInfo";
 
-export const sendGmail: Function = async (
-    email: String,
-    callback: Function
-): Promise<String> => {
+export const auth: Function = async (email: String): Promise<String> => {
     return new Promise(async (resolve, reject) => {
         let transporter = nodemailer.createTransport({
             // Gmail 이용
@@ -38,6 +35,43 @@ export const sendGmail: Function = async (
         } catch (err) {
             console.log(err);
             reject(err);
+        }
+    });
+};
+
+export const idInquery: Function = async (
+    email: String,
+    userid: String
+): Promise<boolean> => {
+    return new Promise(async (resolve, reject) => {
+        let transporter = nodemailer.createTransport({
+            // Gmail 이용
+            service: "gmail",
+            port: 587,
+            host: "smtp.gmail.com",
+            secure: false,
+            auth: {
+                user: user,
+                pass: pass,
+            },
+        });
+
+        // 메일 정보
+        let mailOptions = {
+            from: user,
+            to: email,
+            subject: "블로그 아이디 찾기",
+            html:
+                "<p>아이디 : " +
+                userid +
+                "입니다.</p><a href='localhost:3000'><input type='button' value='로그인하러가기'/></a>",
+        };
+        try {
+            await transporter.sendMail(mailOptions);
+            resolve(true);
+        } catch (err) {
+            console.log(err);
+            reject();
         }
     });
 };
