@@ -219,11 +219,7 @@ memberRouter.route("/idInquery").get(async (req: any, res: any) => {
         } else {
             // 일치하는 사용자 있음
             try {
-                let result: String = await idInquery(
-                    req.body.email,
-                    req.body.userid
-                );
-
+                await idInquery(req.query.email, req.query.userid);
                 res.status(200).json({
                     status: 200,
                     errorCode: null,
