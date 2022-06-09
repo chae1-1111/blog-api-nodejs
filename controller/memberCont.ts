@@ -273,7 +273,11 @@ export const getTokenUser: Function = (token: String): Promise<user> => {
             resolve(
                 result.length === 0
                     ? { UserId: "", UserKey: 0, isMember: false }
-                    : { ...result[0], isMember: true }
+                    : {
+                          UserKey: result[0].UserKey,
+                          UserId: result[0].UserId,
+                          isMember: true,
+                      }
             );
         } catch (err) {
             console.log(err);
