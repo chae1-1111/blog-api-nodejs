@@ -9,6 +9,8 @@ import {
     joinUser,
     login,
     modifyUser,
+    getUserPw,
+    getToken,
 } from "../controller/memberCont";
 
 // interfaces
@@ -21,7 +23,7 @@ import {
 
 // Tools
 import { removeUndefined } from "../func/tools";
-import { auth, idInquiry } from "../func/mail";
+import { auth, idInquiry, pwInquiry } from "../func/mail";
 
 // 메일 인증
 memberRouter.route("/general/email").post(async (req: any, res: any) => {
@@ -230,6 +232,37 @@ memberRouter.route("/idInquiry").get(async (req: any, res: any) => {
                     errorCode: "999",
                 });
             }
+        }
+    } catch (err) {
+        res.status(500).json({
+            status: 500,
+            errorCode: "999",
+        });
+    }
+});
+
+memberRouter.route("/pwInquiry").get(async (req: any, res: any) => {
+    try {
+        let result: number = await getUserPw(req.query.userid, req.query.email);
+        if (result === 0) {
+            // 일치하는 사용자 없음
+            res.status(201).json({
+                status: 201,
+                errorCode: "MEM001",
+            });
+        } else {
+            // 일치하는 사용자 있음
+            let token: String = await getToken(
+                result,
+                req.query.userid,
+                req.query.email
+            );
+
+            await pwInquiry(req.query.email, token);
+            res.status(200).json({
+                status: 200,
+                errorCode: null,
+            });
         }
     } catch (err) {
         res.status(500).json({

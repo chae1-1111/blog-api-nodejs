@@ -1,5 +1,5 @@
 import { Schema, model, connect, connection } from "mongoose";
-import { User, Post, Reply, Like } from "../interfaces"; // 인터페이스
+import { User, Post, Reply, Like, mailToken } from "../interfaces"; // 인터페이스
 import { uri } from "../config/mongoDB"; // MongoDB URI 정보
 
 // 자동 증가
@@ -89,11 +89,27 @@ export const LikeSchema = new Schema<Like>({
 // 추천 모델
 export const LikeModel = model<Like>("like", LikeSchema);
 
+export const TokenSchema = new Schema<mailToken>({
+    UserKey: { type: Number, require: true },
+    CreatedDate: { type: Date, default: Date.now, require: true },
+    ExpireDate: {
+        type: Date,
+        default: () => Date.now() + 0.5 * 60 * 60 * 1000,
+        required: true,
+    },
+    Expired: { type: Boolean, default: false, require: true },
+    Email: { type: String, require: true },
+    UserId: { type: String, require: true },
+    Token: { type: String, require: true },
+});
+
+export const TokenModel = model<mailToken>("token", TokenSchema);
+
+// DB 연결
 const connectDB = () => {
     connect(uri);
 };
 
-// DB 연결
 export const connDB = async () => {
     try {
         connectDB();

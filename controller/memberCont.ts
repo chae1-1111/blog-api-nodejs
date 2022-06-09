@@ -1,5 +1,7 @@
-import { UserModel } from "./connectDB";
+import { UserModel, TokenModel } from "./connectDB";
 import { encrypt } from "../func/encrypt";
+
+const crypto = require("crypto");
 
 // interfaces
 import {
@@ -210,15 +212,43 @@ export const getUserid: Function = async (email: String): Promise<String> => {
 export const getUserPw: Function = async (
     userid: String,
     email: String
-): Promise<Boolean> => {
+): Promise<Number> => {
     return new Promise(async (resolve, reject) => {
         try {
             let result = await UserModel.find(
                 { UserId: userid, Email: email },
-                "_id"
+                "-_id UserKey"
             );
             // 일치하는 사용자 없으면 false
-            resolve(result.length === 0 ? false : true);
+            resolve(result.length === 0 ? 0 : result[0].UserKey);
+        } catch (err) {
+            console.log(err);
+            reject();
+        }
+    });
+};
+
+export const getToken: Function = (
+    userkey: Number,
+    userid: String,
+    email: String
+): Promise<String> => {
+    return new Promise(async (resolve, reject) => {
+        let token = crypto
+            .createHash("sha512")
+            .update(userkey.toString() + userid + email)
+            .digest("hex");
+
+        let tokenObj = new TokenModel({
+            UserKey: userkey,
+            UserId: userid,
+            Email: email,
+            Token: token,
+        });
+
+        try {
+            await tokenObj.save();
+            resolve(token);
         } catch (err) {
             console.log(err);
             reject();

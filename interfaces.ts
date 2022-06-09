@@ -46,6 +46,16 @@ export interface Like {
     UserKey: Number;
 }
 
+export interface mailToken {
+    ExpireDate: Date;
+    Expired: Boolean;
+    CreatedDate: Date;
+    Token: String;
+    Email: String;
+    UserId: String;
+    UserKey: Number;
+}
+
 export interface joinUserForm {
     UserId: String;
     UserPw: String;
