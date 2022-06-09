@@ -269,7 +269,6 @@ export const getTokenUser: Function = (token: String): Promise<user> => {
                 { Token: token },
                 "-_id UserKey UserId"
             );
-            console.log(result);
             // 일치하는 사용자 없으면 false
             resolve(
                 result.length === 0

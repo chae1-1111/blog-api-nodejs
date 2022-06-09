@@ -277,6 +277,7 @@ memberRouter.route("/tokenCheck").get(async (req: any, res: any) => {
     try {
         let result = await getTokenUser(req.query.token);
         if (result.isMember) {
+            console.log(result);
             res.status(200).json({
                 status: 200,
                 errorCode: null,
