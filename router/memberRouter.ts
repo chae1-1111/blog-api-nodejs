@@ -11,6 +11,7 @@ import {
     modifyUser,
     getUserPw,
     getToken,
+    getTokenUser,
 } from "../controller/memberCont";
 
 // interfaces
@@ -262,6 +263,29 @@ memberRouter.route("/pwInquiry").get(async (req: any, res: any) => {
             res.status(200).json({
                 status: 200,
                 errorCode: null,
+            });
+        }
+    } catch (err) {
+        res.status(500).json({
+            status: 500,
+            errorCode: "999",
+        });
+    }
+});
+
+memberRouter.route("/tokenCheck").get(async (req: any, res: any) => {
+    try {
+        let result = await getTokenUser(req.query.token);
+        if (result.isMember) {
+            res.status(200).json({
+                status: 200,
+                errorCode: null,
+                body: { UserKey: result.UserKey, UserId: result.UserId },
+            });
+        } else {
+            res.status(201).json({
+                status: 201,
+                errorCode: "MEM001",
             });
         }
     } catch (err) {

@@ -255,3 +255,29 @@ export const getToken: Function = (
         }
     });
 };
+
+interface user {
+    isMember: Boolean;
+    UserId: String;
+    UserKey: Number;
+}
+
+export const getTokenUser: Function = (token: String): Promise<user> => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let result = await TokenModel.find(
+                { Token: token },
+                "-_id UserKey UserId"
+            );
+            // 일치하는 사용자 없으면 false
+            resolve(
+                result.length === 0
+                    ? { UserId: "", UserKey: 0, isMember: false }
+                    : { ...result[0], isMember: true }
+            );
+        } catch (err) {
+            console.log(err);
+            reject();
+        }
+    });
+};
