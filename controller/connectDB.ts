@@ -91,10 +91,10 @@ export const LikeModel = model<Like>("like", LikeSchema);
 
 export const TokenSchema = new Schema<mailToken>({
     UserKey: { type: Number, require: true },
-    CreatedDate: { type: Date, default: Date.now, require: true },
+    CreatedDate: { type: Date, default: () => Date.now(), require: true },
     ExpireDate: {
         type: Date,
-        default: () => new Date(+new Date() + 0.5 * 60 * 60 * 1000),
+        default: () => Date.now() + 0.5 * 60 * 60 * 1000,
         required: true,
     },
     Expired: { type: Boolean, default: false, require: true },
