@@ -277,11 +277,19 @@ memberRouter.route("/tokenCheck").get(async (req: any, res: any) => {
     try {
         let result = await getTokenUser(req.query.token);
         if (result.isMember) {
-            res.status(200).json({
-                status: 200,
-                errorCode: null,
-                body: { UserKey: result.UserKey, UserId: result.UserId },
-            });
+            if (result.isExpired) {
+                // 토큰 만료
+                res.status(201).json({
+                    status: 201,
+                    errorCode: "TKN001",
+                });
+            } else {
+                res.status(200).json({
+                    status: 200,
+                    errorCode: null,
+                    body: { UserKey: result.UserKey, UserId: result.UserId },
+                });
+            }
         } else {
             res.status(201).json({
                 status: 201,

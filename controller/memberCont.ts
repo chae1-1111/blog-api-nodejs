@@ -260,6 +260,7 @@ interface user {
     isMember: Boolean;
     UserId: String;
     UserKey: Number;
+    isExpired: Boolean;
 }
 
 export const getTokenUser: Function = (token: String): Promise<user> => {
@@ -267,18 +268,31 @@ export const getTokenUser: Function = (token: String): Promise<user> => {
         try {
             let result = await TokenModel.find(
                 { Token: token },
-                "-_id UserKey UserId"
+                "-_id UserKey UserId ExpireDate Expired"
             );
-            // 일치하는 사용자 없으면 false
-            resolve(
-                result.length === 0
-                    ? { UserId: "", UserKey: 0, isMember: false }
-                    : {
-                          UserKey: result[0].UserKey,
-                          UserId: result[0].UserId,
-                          isMember: true,
-                      }
-            );
+
+            if (result.length === 0) {
+                resolve({
+                    isMember: false,
+                    UserId: "",
+                    UserKey: 0,
+                    isExpired: false,
+                });
+            } else if (result[0].ExpireDate < new Date() || result[0].Expired) {
+                resolve({
+                    UserId: "",
+                    UserKey: 0,
+                    isMember: true,
+                    isExpired: true,
+                });
+            } else {
+                resolve({
+                    UserId: result[0].UserId,
+                    UserKey: result[0].UserKey,
+                    isMember: true,
+                    isExpired: false,
+                });
+            }
         } catch (err) {
             console.log(err);
             reject();
