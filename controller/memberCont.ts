@@ -1,4 +1,4 @@
-import { UserModel, TokenModel } from "./connectDB";
+import { UserModel, TokenModel, UserSchema, TokenSchema } from "./connectDB";
 import { encrypt } from "../func/encrypt";
 
 const crypto = require("crypto");
@@ -279,10 +279,6 @@ export const getTokenUser: Function = (token: String): Promise<user> => {
                     isExpired: false,
                 });
             } else if (result[0].ExpireDate < new Date() || result[0].Expired) {
-                console.log(result[0].CreatedDate);
-                console.log(result[0].ExpireDate);
-                console.log(new Date());
-                console.log(result[0].Expired);
                 resolve({
                     UserId: "",
                     UserKey: 0,
@@ -296,6 +292,35 @@ export const getTokenUser: Function = (token: String): Promise<user> => {
                     isMember: true,
                     isExpired: false,
                 });
+            }
+        } catch (err) {
+            console.log(err);
+            reject();
+        }
+    });
+};
+
+export const resetPw: Function = async (
+    userpw: String,
+    token: String,
+    userkey: Number
+): Promise<Boolean> => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const salt = Math.round(new Date().valueOf() * Math.random()) + "";
+            encrypt(userpw, salt);
+            let search = await TokenModel.find(
+                { Token: token, UserKey: userkey },
+                "_id"
+            );
+            if (search.length === 0) {
+                resolve(false);
+            } else {
+                let result = await UserModel.updateOne(
+                    { UserKey: userkey },
+                    { $set: { UserPw: encrypt(userpw, salt), Salt: salt } }
+                );
+                resolve(result.modifiedCount === 0 ? false : true);
             }
         } catch (err) {
             console.log(err);

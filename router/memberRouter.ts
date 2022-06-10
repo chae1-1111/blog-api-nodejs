@@ -12,6 +12,7 @@ import {
     getUserPw,
     getToken,
     getTokenUser,
+    resetPw,
 } from "../controller/memberCont";
 
 // interfaces
@@ -294,6 +295,34 @@ memberRouter.route("/tokenCheck").get(async (req: any, res: any) => {
             res.status(201).json({
                 status: 201,
                 errorCode: "MEM001",
+            });
+        }
+    } catch (err) {
+        res.status(500).json({
+            status: 500,
+            errorCode: "999",
+        });
+    }
+});
+
+memberRouter.route("/resetPw").put(async (req: any, res: any) => {
+    try {
+        let result: boolean = await resetPw(
+            req.body.userpw,
+            req.body.token,
+            req.body.userkey
+        );
+        if (!result) {
+            // 일치하는 사용자 없음
+            res.status(201).json({
+                status: 201,
+                errorCode: "MEM001",
+            });
+        } else {
+            // 수정 성공
+            res.status(200).json({
+                status: 200,
+                errorCode: null,
             });
         }
     } catch (err) {
