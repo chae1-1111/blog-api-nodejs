@@ -320,7 +320,15 @@ export const resetPw: Function = async (
                     { UserKey: userkey },
                     { $set: { UserPw: encrypt(userpw, salt), Salt: salt } }
                 );
-                resolve(result.modifiedCount === 0 ? false : true);
+                if (result.modifiedCount === 0) {
+                    resolve(false);
+                } else {
+                    await TokenModel.updateOne(
+                        { Token: token },
+                        { $set: { Expired: true } }
+                    );
+                    resolve(true);
+                }
             }
         } catch (err) {
             console.log(err);
