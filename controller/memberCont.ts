@@ -279,6 +279,9 @@ export const getTokenUser: Function = (token: String): Promise<user> => {
                     isExpired: false,
                 });
             } else if (result[0].ExpireDate < new Date() || result[0].Expired) {
+                console.log(result[0].ExpireDate);
+                console.log(new Date());
+                console.log(result[0].Expired);
                 resolve({
                     UserId: "",
                     UserKey: 0,
