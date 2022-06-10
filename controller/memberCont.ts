@@ -268,7 +268,7 @@ export const getTokenUser: Function = (token: String): Promise<user> => {
         try {
             let result = await TokenModel.find(
                 { Token: token },
-                "-_id UserKey UserId ExpireDate Expired"
+                "-_id UserKey UserId CreatedDate ExpireDate Expired"
             );
 
             if (result.length === 0) {
@@ -279,6 +279,7 @@ export const getTokenUser: Function = (token: String): Promise<user> => {
                     isExpired: false,
                 });
             } else if (result[0].ExpireDate < new Date() || result[0].Expired) {
+                console.log(result[0].CreatedDate);
                 console.log(result[0].ExpireDate);
                 console.log(new Date());
                 console.log(result[0].Expired);
