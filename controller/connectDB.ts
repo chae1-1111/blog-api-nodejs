@@ -94,7 +94,7 @@ export const TokenSchema = new Schema<mailToken>({
     CreatedDate: { type: Date, default: Date.now, require: true },
     ExpireDate: {
         type: Date,
-        default: () => Date.now() + 0.5 * 60 * 60 * 1000,
+        default: () => new Date(+new Date() + 0.5 * 60 * 60 * 1000),
         required: true,
     },
     Expired: { type: Boolean, default: false, require: true },
