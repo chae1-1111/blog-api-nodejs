@@ -98,7 +98,7 @@ export const pwInquiry: Function = async (
             from: user,
             to: email,
             subject: "블로그 비밀번호 재설정",
-            html: `<p>아래 링크로 이동하여 비밀번호를 재설정하세요.</p><a href='http://localhost:3000/resetPw/${token}'><input type='button' value='비밀번호 재설정'/></a>`,
+            html: `<p>아래 링크로 이동하여 비밀번호를 재설정하세요.</p><a href='http://localhost:3000/resetPw?token=${token}'><input type='button' value='비밀번호 재설정'/></a>`,
         };
         try {
             await transporter.sendMail(mailOptions);
