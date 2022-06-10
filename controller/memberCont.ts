@@ -236,7 +236,7 @@ export const getToken: Function = (
     return new Promise(async (resolve, reject) => {
         let token = crypto
             .createHash("sha512")
-            .update(userkey.toString() + userid + email)
+            .update(userkey.toString() + userid + email + Date.now())
             .digest("hex");
 
         let tokenObj = new TokenModel({
