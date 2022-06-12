@@ -72,7 +72,7 @@ export interface loginForm {
 
 export interface userFilterForm {
     UserKey: Number;
-    UserId: String;
+    UserId?: String;
     UserPw: String;
 }
 

@@ -131,6 +131,42 @@ export const modifyUser: Function = async (
     });
 };
 
+// 회원정보 수정
+export const modifyPw: Function = async (
+    userFilter: userFilterForm,
+    newPw: String
+): Promise<boolean> => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let temp = await UserModel.find(
+                { UserKey: userFilter.UserKey },
+                "-_id Salt"
+            );
+            if (temp.length === 0) resolve(false);
+            let salt = temp[0].Salt;
+            let newSalt = Math.round(new Date().valueOf() * Math.random()) + "";
+
+            let result = await UserModel.updateOne(
+                {
+                    ...userFilter,
+                    UserPw: encrypt(userFilter.UserPw, salt),
+                },
+                {
+                    $set: {
+                        UserPw: encrypt(newPw, newSalt),
+                        Salt: newSalt,
+                    },
+                }
+            );
+            // 일치하는 사용자 정보 없으면 false
+            resolve(result.matchedCount === 0 ? false : true);
+        } catch (err) {
+            console.log(err);
+            reject(err);
+        }
+    });
+};
+
 // 회원 탈퇴
 export const deleteUser: Function = async (
     user: userFilterForm

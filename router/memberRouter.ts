@@ -13,6 +13,7 @@ import {
     getToken,
     getTokenUser,
     resetPw,
+    modifyPw,
 } from "../controller/memberCont";
 
 // interfaces
@@ -149,7 +150,6 @@ memberRouter.route("/general").put(async (req: any, res: any) => {
 
     // 변경할 내용, undefined 제거
     let user: modifyUserForm = removeUndefined({
-        UserPw: req.body.newPw,
         Email: req.body.newEmail,
         Name: req.body.newName,
         Birth: req.body.newBirth,
@@ -158,6 +158,37 @@ memberRouter.route("/general").put(async (req: any, res: any) => {
 
     try {
         let result: boolean = await modifyUser(userFilter, user);
+        if (!result) {
+            // 일치하는 기존 사용자 정보 없음
+            res.status(201).json({
+                status: 201,
+                errorCode: "MEM001",
+            });
+        } else {
+            // 수정 성공
+            res.status(200).json({
+                status: 200,
+                errorCode: null,
+            });
+        }
+    } catch (err) {
+        res.status(500).json({
+            status: 500,
+            errorCode: "999",
+        });
+    }
+});
+
+// 비밀번호 변경
+memberRouter.route("/general/modifyPw").put(async (req: any, res: any) => {
+    // 기존 사용자 정보
+    let userFilter: userFilterForm = {
+        UserKey: req.body.userkey,
+        UserPw: req.body.userpw,
+    };
+
+    try {
+        let result: boolean = await modifyPw(userFilter, req.body.newPw);
         if (!result) {
             // 일치하는 기존 사용자 정보 없음
             res.status(201).json({
