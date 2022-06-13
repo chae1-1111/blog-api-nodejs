@@ -156,8 +156,6 @@ memberRouter.route("/general").put(async (req: any, res: any) => {
         Keyword: req.body.keyword,
     });
 
-    console.log(user);
-
     try {
         let result: boolean = await modifyUser(userFilter, user);
         if (!result) {
