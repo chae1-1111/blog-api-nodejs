@@ -378,7 +378,7 @@ interface UserInfo {
 }
 
 export const getUserInfo: Function = async (
-    userkey: string
+    userkey: number
 ): Promise<UserInfo> => {
     return new Promise<UserInfo>(async (resolve, reject) => {
         try {
