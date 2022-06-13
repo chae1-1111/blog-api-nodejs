@@ -369,3 +369,38 @@ export const resetPw: Function = async (
         }
     });
 };
+
+interface UserInfo {
+    Name?: String;
+    Birth?: String;
+    Keyword?: String[];
+    isUser: boolean;
+}
+
+export const getUserInfo: Function = async (
+    userkey: string
+): Promise<UserInfo> => {
+    return new Promise<UserInfo>(async (resolve, reject) => {
+        try {
+            let result = await UserModel.find(
+                { UserKey: userkey },
+                "-_id Name Birth Keyword"
+            );
+            if (result.length === 0) {
+                resolve({
+                    isUser: false,
+                });
+            } else {
+                resolve({
+                    isUser: true,
+                    Name: result[0].Name,
+                    Birth: result[0].Birth,
+                    Keyword: result[0].Keyword,
+                });
+            }
+        } catch (err) {
+            console.log(err);
+            reject();
+        }
+    });
+};
