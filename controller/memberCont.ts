@@ -102,12 +102,11 @@ export const modifyUser: Function = async (
     return new Promise(async (resolve, reject) => {
         try {
             let temp = await UserModel.find(
-                { UserId: userFilter.UserId },
+                { UserKey: userFilter.UserKey },
                 "-_id Salt"
             );
             if (temp.length === 0) resolve(false);
             let salt = temp[0].Salt;
-            let newSalt = Math.round(new Date().valueOf() * Math.random()) + "";
 
             let result = await UserModel.updateOne(
                 {
@@ -117,8 +116,6 @@ export const modifyUser: Function = async (
                 {
                     $set: {
                         ...user,
-                        UserPw: encrypt(user.UserPw, newSalt),
-                        Salt: newSalt,
                     },
                 }
             );
@@ -131,7 +128,7 @@ export const modifyUser: Function = async (
     });
 };
 
-// 회원정보 수정
+// 비밀번호 수정
 export const modifyPw: Function = async (
     userFilter: userFilterForm,
     newPw: String

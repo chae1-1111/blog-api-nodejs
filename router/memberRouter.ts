@@ -144,7 +144,6 @@ memberRouter.route("/general").put(async (req: any, res: any) => {
     // 기존 사용자 정보
     let userFilter: userFilterForm = {
         UserKey: req.body.userkey,
-        UserId: req.body.userid,
         UserPw: req.body.userpw,
     };
 
