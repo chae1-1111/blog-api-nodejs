@@ -174,7 +174,7 @@ export const deleteUser: Function = async (
     return new Promise(async (resolve, reject) => {
         try {
             let temp = await UserModel.find(
-                { UserId: user.UserId },
+                { UserKey: user.UserKey },
                 "-_id Salt"
             );
             if (temp.length === 0) resolve(false);

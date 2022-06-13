@@ -215,7 +215,6 @@ memberRouter.route("/general").delete(async (req: any, res: any) => {
     // 사용자 정보
     let user: userFilterForm = {
         UserKey: req.body.userkey,
-        UserId: req.body.userid,
         UserPw: req.body.userpw,
     };
 
