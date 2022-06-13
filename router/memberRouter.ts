@@ -365,7 +365,7 @@ memberRouter.route("/resetPw").put(async (req: any, res: any) => {
 
 memberRouter.route("/general/getUserInfo").get(async (req: any, res: any) => {
     try {
-        let user = await getUserInfo(req.params.userkey);
+        let user = await getUserInfo(req.query.userkey);
         if (!user.isUser) {
             res.status(201).json({
                 status: 201,
