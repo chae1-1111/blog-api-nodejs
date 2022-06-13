@@ -150,10 +150,10 @@ memberRouter.route("/general").put(async (req: any, res: any) => {
 
     // 변경할 내용, undefined 제거
     let user: modifyUserForm = removeUndefined({
-        Email: req.body.newEmail,
-        Name: req.body.newName,
-        Birth: req.body.newBirth,
-        Keyword: req.body.newKeyword ? [...req.body.newKeyword] : undefined,
+        Email: req.body.email,
+        Name: req.body.name,
+        Birth: req.body.birth,
+        Keyword: req.body.keyword,
     });
 
     try {
