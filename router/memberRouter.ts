@@ -14,6 +14,7 @@ import {
     getTokenUser,
     resetPw,
     modifyPw,
+    getUserInfo,
 } from "../controller/memberCont";
 
 // interfaces
@@ -149,10 +150,10 @@ memberRouter.route("/general").put(async (req: any, res: any) => {
 
     // 변경할 내용, undefined 제거
     let user: modifyUserForm = removeUndefined({
-        Email: req.body.newEmail,
-        Name: req.body.newName,
-        Birth: req.body.newBirth,
-        Keyword: req.body.newKeyword ? [...req.body.newKeyword] : undefined,
+        Email: req.body.email,
+        Name: req.body.name,
+        Birth: req.body.birth,
+        Keyword: req.body.keyword,
     });
 
     try {
@@ -352,6 +353,33 @@ memberRouter.route("/resetPw").put(async (req: any, res: any) => {
             res.status(200).json({
                 status: 200,
                 errorCode: null,
+            });
+        }
+    } catch (err) {
+        res.status(500).json({
+            status: 500,
+            errorCode: "999",
+        });
+    }
+});
+
+memberRouter.route("/general/getUserInfo").get(async (req: any, res: any) => {
+    try {
+        let user = await getUserInfo(req.query.userkey);
+        if (!user.isUser) {
+            res.status(201).json({
+                status: 201,
+                errorCode: "MEM001",
+            });
+        } else {
+            res.status(200).json({
+                status: 200,
+                errorCode: null,
+                body: {
+                    Name: user.Name,
+                    Birth: user.Birth,
+                    Keyword: user.Keyword,
+                },
             });
         }
     } catch (err) {
