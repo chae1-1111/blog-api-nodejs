@@ -94,6 +94,7 @@ export interface postForm {
 
 export interface postListForm {
     Title: String;
+    Description: String;
     Name: String;
     Created: Date;
     PostKey: Number;

@@ -14,6 +14,7 @@ import {
     registReply,
     removePost,
     removeReply,
+    getPostList,
 } from "../controller/postCont";
 import { getUser, isOwner } from "../controller/memberCont";
 import { isLiker, like, unlike } from "../controller/likeCont";
@@ -76,7 +77,7 @@ postRouter.route("/").post(async (req: any, res: any) => {
 });
 
 // 특정 사용자 게시글 리스트
-postRouter.route("/list/:userid").get(async (req: any, res: any) => {
+postRouter.route("/listAll/:userid").get(async (req: any, res: any) => {
     try {
         // 블로그 소유자 여부
         let owner: Boolean = await isOwner(
@@ -86,6 +87,35 @@ postRouter.route("/list/:userid").get(async (req: any, res: any) => {
 
         // 게시글 정보
         let result: postListForm[] = await getAllPost(req.params.userid);
+        res.status(200).json({
+            status: 200,
+            errorCode: null,
+            owner: owner,
+            data: result,
+        });
+    } catch (err) {
+        res.status(500).json({
+            status: 500,
+            errorCode: "999",
+        });
+    }
+});
+
+// 게시글 리스트
+postRouter.route("/list/:userid").get(async (req: any, res: any) => {
+    try {
+        // 블로그 소유자 여부
+        let owner: Boolean = await isOwner(
+            req.params.userid,
+            req.query.userkey ? req.query.userkey : -1
+        );
+
+        // 게시글 정보
+        let result: postListForm[] = await getPostList(
+            req.params.userid,
+            req.query.category ? req.query.category : "",
+            req.query.page ? req.query.page : 1
+        );
         res.status(200).json({
             status: 200,
             errorCode: null,

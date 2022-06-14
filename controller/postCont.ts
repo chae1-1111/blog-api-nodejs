@@ -38,8 +38,40 @@ export const getAllPost: Function = async (
                 {
                     UserId: userid,
                 },
-                "-_id Title Name Created PostKey Views Likes UserId"
-            );
+                "-_id Title Description Name Created PostKey Views Likes UserId"
+            ).sort({ Created: -1 });
+            resolve(result);
+        } catch (err) {
+            console.log(err);
+            reject();
+        }
+    });
+};
+
+// 특정 사용자 모든 게시글 조회
+export const getPostList: Function = async (
+    userid: string,
+    category: string,
+    page: number
+): Promise<postListForm[]> => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let result: postListForm[] = await PostModel.find(
+                {
+                    UserId: userid,
+                    Category: category === "" ? { $exists: true } : category,
+                },
+                "-_id Title Description Name Created PostKey Views Likes UserId"
+            )
+                .sort({ Created: -1 })
+                .skip(--page * 10)
+                .limit(10);
+            result.map((post) => {
+                post.Description =
+                    post.Description.length > 30
+                        ? post.Description.substring(0, 30) + "..."
+                        : post.Description;
+            });
             resolve(result);
         } catch (err) {
             console.log(err);
