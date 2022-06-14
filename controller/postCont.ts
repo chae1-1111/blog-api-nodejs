@@ -61,7 +61,7 @@ export const getPostList: Function = async (
                     UserId: userid,
                     Category: category === "" ? { $exists: true } : category,
                 },
-                "-_id Title Description Name Created PostKey Views Likes" +
+                "-_id Title Description Name Created PostKey Views Likes Replys" +
                     category ===
                     ""
                     ? " Category"
