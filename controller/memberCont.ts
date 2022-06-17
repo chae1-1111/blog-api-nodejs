@@ -428,11 +428,11 @@ export const editProfileImage = async (
     });
 };
 
-export const getProfileImage = async (userkey: number): Promise<any> => {
+export const getProfileImage = async (userid: string): Promise<any> => {
     return new Promise(async (resolve, reject) => {
         try {
             let result = await UserModel.find(
-                { UserKey: userkey },
+                { UserId: userid },
                 "-_id ProfileImage"
             );
             if (result.length === 0) {

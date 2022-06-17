@@ -429,7 +429,7 @@ memberRouter.put(
 
 memberRouter.route("/getProfileImage").get(async (req: any, res: any) => {
     try {
-        let profileImage = await getProfileImage(req.query.userkey);
+        let profileImage = await getProfileImage(req.query.userid);
         if (!profileImage) {
             res.status(201).json({
                 status: 201,
