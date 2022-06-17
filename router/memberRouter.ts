@@ -16,6 +16,7 @@ import {
     resetPw,
     modifyPw,
     getUserInfo,
+    editProfileImage,
 } from "../controller/memberCont";
 
 // interfaces
@@ -399,12 +400,28 @@ const upload = multer({
 memberRouter.put(
     "/profileImage",
     upload.single("img"),
-    (req: any, res: any) => {
-        console.log(req.file);
-        console.log(req.body);
-        res.status(200).json({
-            status: 200,
-            errorCode: null,
-        });
+    async (req: any, res: any) => {
+        try {
+            let result = await editProfileImage(
+                req.body.userkey,
+                req.file.path
+            );
+            if (!result) {
+                res.status(201).json({
+                    status: 201,
+                    errorCode: "MEM001",
+                });
+            } else {
+                res.status(200).json({
+                    status: 200,
+                    errorCode: null,
+                });
+            }
+        } catch (err) {
+            res.status(500).json({
+                status: 500,
+                errorCode: "999",
+            });
+        }
     }
 );
