@@ -391,22 +391,9 @@ memberRouter.route("/general/getUserInfo").get(async (req: any, res: any) => {
     }
 });
 
-const storage = multer.diskStorage({
-    destination(req: any, file: any, callback: Function) {
-        callback(null, "/images/profile");
-    },
-    filename(req: any, file: any, callback: Function) {
-        let name = file.originalname;
-        callback(null, Date.now() + name);
-    },
-});
-
 const upload = multer({
-    storage,
-    limits: {
-        files: 1,
-        fileSize: 5 * 1024 * 1024 * 1024,
-    },
+    dest: "images/profile/",
+    limits: { files: 1, fileSize: 5 * 1024 * 1024 * 1024 },
 });
 
 memberRouter.put(
