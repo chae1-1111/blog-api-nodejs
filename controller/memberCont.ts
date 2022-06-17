@@ -441,7 +441,7 @@ export const getProfileImage = async (userkey: number): Promise<any> => {
                 resolve("");
             } else {
                 fs.readFile(
-                    `../${result[0].ProfileImage}`,
+                    `/${result[0].ProfileImage}`,
                     (err: any, data: any) => {
                         if (err) {
                             console.log(err);
