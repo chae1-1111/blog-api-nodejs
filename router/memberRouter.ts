@@ -392,10 +392,10 @@ memberRouter.route("/general/getUserInfo").get(async (req: any, res: any) => {
 });
 
 const storage = multer.diskStorage({
-    destination(req, file, callback) {
+    destination(req: any, file: any, callback: Function) {
         callback(null, "/images/profile");
     },
-    filename(req, file, callback) {
+    filename(req: any, file: any, callback: Function) {
         let name = file.originalname;
         callback(null, Date.now() + name);
     },
