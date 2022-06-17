@@ -405,3 +405,21 @@ export const getUserInfo: Function = async (
     });
 };
 
+export const editProfileImage = async (userkey: number, image: string):Promise<boolean> => { 
+    return new Promise(async (resolve, reject) => { 
+        try { 
+            let result = await UserModel.updateOne( 
+                { UserKey: userkey }, 
+                { $set: { ProfileImage: image } } 
+            ); 
+            if (result.modifiedCount === 0) { 
+                resolve(false); 
+            } else { 
+                resolve(true); 
+            } 
+        } catch (err) { 
+            console.log(err); 
+            reject(); 
+        } 
+    })
+};

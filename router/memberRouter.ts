@@ -391,13 +391,31 @@ memberRouter.route("/general/getUserInfo").get(async (req: any, res: any) => {
     }
 });
 
-const upload = multer({ dest: "images/profile/" }); //dest : 저장 위치
+const storage = multer.diskStorage({
+    destination(req, file, callback) {
+        callback(null, "/images/profile");
+    },
+    filename(req, file, callback) {
+        let name = file.originalname;
+        callback(null, Date.now() + name);
+    },
+});
+
+const upload = multer({
+    storage,
+    limits: {
+        files: 1,
+        fileSize: 5 * 1024 * 1024 * 1024,
+    },
+});
 
 memberRouter.put(
     "/profileImage",
     upload.single("img"),
     (req: any, res: any) => {
-        res.json(req.file);
-        console.log(req.file);
+        res.status(200).json({
+            status: 200,
+            errorCode: null,
+        });
     }
 );
