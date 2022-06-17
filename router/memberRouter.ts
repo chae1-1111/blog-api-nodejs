@@ -1,4 +1,5 @@
 export const memberRouter = require("express").Router();
+const multer = require("multer");
 
 // Controller
 import {
@@ -389,3 +390,14 @@ memberRouter.route("/general/getUserInfo").get(async (req: any, res: any) => {
         });
     }
 });
+
+const upload = multer({ dest: "images/profile/" }); //dest : 저장 위치
+
+memberRouter.put(
+    "/profileImage",
+    upload.single("img"),
+    (req: any, res: any) => {
+        res.json(req.file);
+        console.log(req.file);
+    }
+);
