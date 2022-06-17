@@ -1,6 +1,7 @@
 import { UserModel, TokenModel, UserSchema, TokenSchema } from "./connectDB";
 import { encrypt } from "../func/encrypt";
 
+const fs = require("fs");
 const crypto = require("crypto");
 
 // interfaces
@@ -419,6 +420,33 @@ export const editProfileImage = async (
                 resolve(false);
             } else {
                 resolve(true);
+            }
+        } catch (err) {
+            console.log(err);
+            reject();
+        }
+    });
+};
+
+export const getProfileImage = async (userkey: number): Promise<any> => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let result = await UserModel.find(
+                { UserKey: userkey },
+                "-_id ProfileImage"
+            );
+            if (result.length === 0) {
+                resolve(false);
+            } else if (result[0].ProfileImage === "") {
+                resolve("");
+            } else {
+                fs.readFile(`../${result[0].ProfileImage}`, (err, data) => {
+                    if (err) {
+                        console.log(err);
+                        reject();
+                    }
+                    resolve(data);
+                });
             }
         } catch (err) {
             console.log(err);

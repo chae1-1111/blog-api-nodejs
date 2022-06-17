@@ -17,6 +17,7 @@ import {
     modifyPw,
     getUserInfo,
     editProfileImage,
+    getProfileImage,
 } from "../controller/memberCont";
 
 // interfaces
@@ -425,3 +426,26 @@ memberRouter.put(
         }
     }
 );
+
+memberRouter.route("/getProfileImage").get(async (req: any, res: any) => {
+    try {
+        let profileImage = await getProfileImage(req.query.userkey);
+        if (!profileImage) {
+            res.status(201).json({
+                status: 201,
+                errorCode: "MEM001",
+            });
+        } else {
+            res.status(200).json({
+                status: 200,
+                errorCode: null,
+                image: profileImage,
+            });
+        }
+    } catch (err) {
+        res.status(500).json({
+            status: 500,
+            errorCode: "999",
+        });
+    }
+});
