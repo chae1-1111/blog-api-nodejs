@@ -46,7 +46,7 @@ export const login: Function = async (user: loginForm) => {
             let salt = result[0].Salt;
             result = await UserModel.find(
                 { UserId: user.UserId, UserPw: encrypt(user.UserPw, salt) },
-                "-_id UserKey Name Email"
+                "-_id UserKey Name Email ProfileImage"
             );
             resolve(result.length !== 0 ? result[0] : false);
         } catch (err) {

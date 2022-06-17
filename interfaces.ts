@@ -12,6 +12,7 @@ export interface User {
     Keyword: Array<String>;
     Salt: String;
     Created: Date;
+    ProfileImage?: String;
 }
 
 export interface Post {
