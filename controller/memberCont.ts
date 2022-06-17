@@ -440,13 +440,16 @@ export const getProfileImage = async (userkey: number): Promise<any> => {
             } else if (result[0].ProfileImage === "") {
                 resolve("");
             } else {
-                fs.readFile(`../${result[0].ProfileImage}`, (err, data) => {
-                    if (err) {
-                        console.log(err);
-                        reject();
+                fs.readFile(
+                    `../${result[0].ProfileImage}`,
+                    (err: any, data: any) => {
+                        if (err) {
+                            console.log(err);
+                            reject();
+                        }
+                        resolve(data);
                     }
-                    resolve(data);
-                });
+                );
             }
         } catch (err) {
             console.log(err);
