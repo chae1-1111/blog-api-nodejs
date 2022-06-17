@@ -393,7 +393,7 @@ memberRouter.route("/general/getUserInfo").get(async (req: any, res: any) => {
 
 const upload = multer({
     dest: "images/profile/",
-    limits: { files: 1, fileSize: 5 * 1024 * 1024 * 1024 },
+    limits: { fileSize: 5 * 1024 * 1024 * 1024 },
 });
 
 memberRouter.put(
