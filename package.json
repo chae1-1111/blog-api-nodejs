@@ -4,7 +4,7 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "start": "npx pm2 start index.ts --watch --ignore-watch '/images'"
+        "start": "npx pm2 start index.ts --watch --ignore-watch 'images/*'"
     },
     "repository": {
         "type": "git",
