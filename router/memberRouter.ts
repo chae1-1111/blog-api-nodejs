@@ -401,7 +401,6 @@ memberRouter.put(
     upload.single("img"),
     (req: any, res: any) => {
         console.log(req.file);
-        console.log(req.data);
         res.status(200).json({
             status: 200,
             errorCode: null,
