@@ -453,7 +453,7 @@ memberRouter.route("/getProfileImage").get(async (req: any, res: any) => {
 
 memberRouter.route("/getBlogInfo").get(async (req: any, res: any) => {
     try {
-        let blogInfo = await getBlogInfo(req.query.userkey);
+        let blogInfo = await getBlogInfo(req.query.userid);
         if (!blogInfo.isUser) {
             res.status(201).json({
                 status: 201,
