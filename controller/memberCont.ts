@@ -457,3 +457,59 @@ export const getProfileImage = async (userid: string): Promise<any> => {
         }
     });
 };
+
+interface BlogInfo {
+    Email?: String;
+    Name?: String;
+    Categories?: String[];
+    ProfileImage?: any;
+    isUser: boolean;
+}
+
+export const getBlogInfo: Function = async (
+    userid: String
+): Promise<BlogInfo> => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let result = await UserModel.find(
+                { UserId: userid },
+                "-_id Email Name Categories ProfileImage"
+            );
+            if (result.length === 0) {
+                resolve({
+                    isUser: false,
+                });
+            } else {
+                if (result[0].ProfileImage === "") {
+                    resolve({
+                        isUser: true,
+                        Email: result[0].Email,
+                        Name: result[0].Name,
+                        Categories: result[0].Categories,
+                        ProfileImage: "",
+                    });
+                } else {
+                    fs.readFile(
+                        `./${result[0].ProfileImage}`,
+                        (err: any, data: any) => {
+                            if (err) {
+                                console.log(err);
+                                reject();
+                            }
+                            resolve({
+                                isUser: true,
+                                Email: result[0].Email,
+                                Name: result[0].Name,
+                                Categories: result[0].Categories,
+                                ProfileImage: data
+                            });
+                        }
+                    );
+                }
+            }
+        } catch (err) {
+            console.log(err);
+            reject();
+        }
+    });
+};

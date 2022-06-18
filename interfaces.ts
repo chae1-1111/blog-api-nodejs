@@ -13,6 +13,7 @@ export interface User {
     Salt: String;
     Created: Date;
     ProfileImage?: String;
+    Categories: Array<String>;
 }
 
 export interface Post {

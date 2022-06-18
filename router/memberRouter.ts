@@ -18,6 +18,7 @@ import {
     getUserInfo,
     editProfileImage,
     getProfileImage,
+    getBlogInfo,
 } from "../controller/memberCont";
 
 // interfaces
@@ -440,6 +441,29 @@ memberRouter.route("/getProfileImage").get(async (req: any, res: any) => {
                 status: 200,
                 errorCode: null,
                 image: profileImage,
+            });
+        }
+    } catch (err) {
+        res.status(500).json({
+            status: 500,
+            errorCode: "999",
+        });
+    }
+});
+
+memberRouter.route("/getBlogInfo").get(async (req: any, res: any) => {
+    try {
+        let blogInfo = await getBlogInfo(req.query.userkey);
+        if (!blogInfo.isUser) {
+            res.status(201).json({
+                status: 201,
+                errorCode: "MEM001",
+            });
+        } else {
+            res.status(200).json({
+                status: 200,
+                errorCode: null,
+                body: blogInfo,
             });
         }
     } catch (err) {

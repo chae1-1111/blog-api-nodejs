@@ -25,6 +25,7 @@ export const UserSchema = new Schema<User>({
     Salt: { type: String, require: true },
     Created: { type: Date, default: Date.now, require: true },
     ProfileImage: { type: String, default: "" },
+    Categories: { type: [String], default: [], require: true },
 });
 
 // UserKey 자동증가
