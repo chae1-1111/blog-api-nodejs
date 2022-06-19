@@ -19,6 +19,7 @@ import {
     editProfileImage,
     getProfileImage,
     getBlogInfo,
+    getCategories,
 } from "../controller/memberCont";
 
 // interfaces
@@ -466,6 +467,23 @@ memberRouter.route("/getBlogInfo").get(async (req: any, res: any) => {
                 body: blogInfo,
             });
         }
+    } catch (err) {
+        res.status(500).json({
+            status: 500,
+            errorCode: "999",
+        });
+    }
+});
+
+memberRouter.route("getCategories").get(async (req: any, res: any) => {
+    try {
+        let categories = await getCategories(req.query.userkey);
+
+        res.status(200).json({
+            status: 200,
+            errorCode: null,
+            body: { Categories: categories as String[] },
+        });
     } catch (err) {
         res.status(500).json({
             status: 500,

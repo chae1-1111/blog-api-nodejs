@@ -519,3 +519,22 @@ export const getBlogInfo: Function = async (
         }
     });
 };
+
+export const getCategories: Function = async (userkey: number):Promise<String[]>    => {
+    return new Promise(async (resolve, reject) => { 
+        try {
+            let result = await UserModel.find(
+                { UserKey: userkey },
+                "-_id Categories"
+            );
+            if (result.length === 0) {
+                resolve([]);
+            } else {
+                resolve(result[0].Categories);
+            }
+        } catch (err) {
+            console.log(err);
+            reject();
+        }
+    })
+}
