@@ -475,7 +475,7 @@ memberRouter.route("/getBlogInfo").get(async (req: any, res: any) => {
     }
 });
 
-memberRouter.route("getCategories").get(async (req: any, res: any) => {
+memberRouter.route("/getCategories").get(async (req: any, res: any) => {
     try {
         let categories = await getCategories(req.query.userkey);
 
