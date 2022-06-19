@@ -412,6 +412,9 @@ export const editProfileImage = async (
 ): Promise<boolean> => {
     return new Promise(async (resolve, reject) => {
         try {
+            let path = (
+                await UserModel.find({ UserKey: userkey }, "-_id ProfileImage")
+            )[0].ProfileImage;
             let result = await UserModel.updateOne(
                 { UserKey: userkey },
                 { $set: { ProfileImage: imagePath } }
@@ -419,6 +422,9 @@ export const editProfileImage = async (
             if (result.modifiedCount === 0) {
                 resolve(false);
             } else {
+                if (path !== "") {
+                    fs.unlinkSync(`./${path}`);
+                }
                 resolve(true);
             }
         } catch (err) {
@@ -501,7 +507,7 @@ export const getBlogInfo: Function = async (
                                 Email: result[0].Email,
                                 Name: result[0].Name,
                                 Categories: result[0].Categories,
-                                ProfileImage: data
+                                ProfileImage: data,
                             });
                         }
                     );
