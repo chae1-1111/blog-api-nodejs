@@ -319,6 +319,7 @@ export const removeCategory: Function = async (
             resolve(true);
         } catch (err) {
             console.log(err);
+            console.log("here");
             reject();
         }
     });
