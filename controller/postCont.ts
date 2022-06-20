@@ -314,12 +314,11 @@ export const removeCategory: Function = async (
         try {
             let result = await PostModel.deleteMany({
                 UserKey: userkey,
-                Category: { $in: { categories } },
+                Category: { $in: categories },
             });
             resolve(true);
         } catch (err) {
             console.log(err);
-            console.log("here");
             reject();
         }
     });
