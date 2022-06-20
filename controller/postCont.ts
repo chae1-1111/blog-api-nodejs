@@ -305,3 +305,46 @@ export const removeReply: Function = async (
         }
     });
 };
+
+export const removeCategory: Function = async (
+    userkey: number,
+    categories: string[]
+): Promise<boolean> => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let result = await PostModel.deleteMany({
+                UserKey: userkey,
+                Category: { $in: { categories } },
+            });
+            resolve(true);
+        } catch (err) {
+            console.log(err);
+            reject();
+        }
+    });
+};
+
+interface categoryProps {
+    exists: string;
+    new: string;
+}
+
+export const modifyCategory: Function = async (
+    userkey: number,
+    objs: categoryProps[]
+) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            objs.forEach(async (obj) => {
+                let result = await PostModel.updateMany(
+                    { UserKey: userkey, Category: obj.exists },
+                    { $set: { Category: obj.new } }
+                );
+            });
+            resolve(true);
+        } catch (err) {
+            console.log(err);
+            reject();
+        }
+    });
+};

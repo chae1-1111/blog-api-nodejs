@@ -20,6 +20,7 @@ import {
     getProfileImage,
     getBlogInfo,
     getCategories,
+    setCategories,
 } from "../controller/memberCont";
 
 // interfaces
@@ -33,6 +34,7 @@ import {
 // Tools
 import { removeUndefined } from "../func/tools";
 import { auth, idInquiry, pwInquiry } from "../func/mail";
+import { modifyCategory, removeCategory } from "../controller/postCont";
 
 // 메일 인증
 memberRouter.route("/general/email").post(async (req: any, res: any) => {
@@ -483,6 +485,46 @@ memberRouter.route("/getCategories").get(async (req: any, res: any) => {
             status: 200,
             errorCode: null,
             body: { Categories: categories as String[] },
+        });
+    } catch (err) {
+        res.status(500).json({
+            status: 500,
+            errorCode: "999",
+        });
+    }
+});
+
+interface modifiedCategory {
+    exists: string;
+    new: string;
+}
+
+memberRouter.route("/setCategories").put(async (req: any, res: any) => {
+    try {
+        let category = [] as string[];
+        let modifiedCategory = [] as modifiedCategory[];
+        req.body.category.forEach((c: any) => {
+            category.push(c.Category);
+            if (!c.isNew && c.Category !== c.existingCategory) {
+                modifiedCategory.push({
+                    exists: c.existingCategory,
+                    new: c.Category,
+                } as modifiedCategory);
+            }
+        });
+        let result = await setCategories(req.body.userkey, category);
+        result &&
+            res.status(201).json({
+                status: 201,
+                errorCode: "MEM001",
+            });
+        req.body.deletedCategory.length > 0 &&
+            (await removeCategory(req.body.userkey, req.body.deletedCategory));
+        modifiedCategory.length > 0 &&
+            (await modifyCategory(req.body.userkey, modifiedCategory));
+        res.status(200).json({
+            status: 200,
+            errorCode: null,
         });
     } catch (err) {
         res.status(500).json({

@@ -520,8 +520,10 @@ export const getBlogInfo: Function = async (
     });
 };
 
-export const getCategories: Function = async (userkey: number):Promise<String[]>    => {
-    return new Promise(async (resolve, reject) => { 
+export const getCategories: Function = async (
+    userkey: number
+): Promise<String[]> => {
+    return new Promise(async (resolve, reject) => {
         try {
             let result = await UserModel.find(
                 { UserKey: userkey },
@@ -536,5 +538,27 @@ export const getCategories: Function = async (userkey: number):Promise<String[]>
             console.log(err);
             reject();
         }
-    })
-}
+    });
+};
+
+export const setCategories: Function = async (
+    userkey: number,
+    categories: String[]
+): Promise<boolean> => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let result = await UserModel.updateOne(
+                { UserKey: userkey },
+                { $set: { Categories: categories } }
+            );
+            if (result.matchedCount === 0) {
+                resolve(false);
+            } else {
+                resolve(true);
+            }
+        } catch (err) {
+            console.log(err);
+            reject();
+        }
+    });
+};
