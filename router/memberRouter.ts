@@ -513,7 +513,7 @@ memberRouter.route("/setCategories").put(async (req: any, res: any) => {
             }
         });
         let result = await setCategories(req.body.userkey, category);
-        result &&
+        !result &&
             res.status(201).json({
                 status: 201,
                 errorCode: "MEM001",
