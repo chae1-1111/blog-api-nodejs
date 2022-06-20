@@ -503,7 +503,7 @@ memberRouter.route("/setCategories").put(async (req: any, res: any) => {
     try {
         let category = [] as string[];
         let modifiedCategory = [] as modifiedCategory[];
-        req.body.category.forEach((c: any) => {
+        req.body.Categories.forEach((c: any) => {
             category.push(c.Category);
             if (!c.isNew && c.Category !== c.existingCategory) {
                 modifiedCategory.push({
