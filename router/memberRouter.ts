@@ -527,7 +527,6 @@ memberRouter.route("/setCategories").put(async (req: any, res: any) => {
             errorCode: null,
         });
     } catch (err) {
-        console.log(err);
         res.status(500).json({
             status: 500,
             errorCode: "999",
