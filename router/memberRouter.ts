@@ -465,10 +465,11 @@ memberRouter.route("/getBlogInfo").get(async (req: any, res: any) => {
                 errorCode: "MEM001",
             });
         } else {
-            let categoryCount = getPostCountAll(
+            let categoryCount = await getPostCountAll(
                 req.query.userid,
                 blogInfo.Categories
             );
+
             res.status(200).json({
                 status: 200,
                 errorCode: null,
