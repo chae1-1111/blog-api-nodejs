@@ -72,8 +72,8 @@ export const getPostList: Function = async (
                 .limit(10);
             result.map((post) => {
                 post.Description =
-                    post.Description.length > 30
-                        ? post.Description.substring(0, 30) + "..."
+                    post.Description.length > 200
+                        ? post.Description.substring(0, 200) + "..."
                         : post.Description;
             });
             resolve(result);
