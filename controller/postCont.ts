@@ -84,6 +84,39 @@ export const getPostList: Function = async (
     });
 };
 
+interface PostCountAll {
+    Total: number;
+    eachCategory: [{ Category: string; Count: number }?];
+}
+
+export const getPostCountAll = async (
+    userid: string,
+    categories: string[]
+): Promise<PostCountAll> => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let arr = await PostModel.find(
+                { UserId: userid, Category: { $in: categories } },
+                "_id Category"
+            );
+            let result: PostCountAll = {
+                Total: arr.length,
+                eachCategory: [],
+            };
+            await categories.forEach((category) => {
+                result.eachCategory.push({
+                    Category: category,
+                    Count: arr.filter((c) => c.Category === category).length,
+                });
+            });
+            resolve(result);
+        } catch (err) {
+            console.log(err);
+            reject();
+        }
+    });
+};
+
 // 조회수 증가
 export const incViews: Function = async (postkey: Number): Promise<Boolean> => {
     return new Promise(async (resolve, reject) => {

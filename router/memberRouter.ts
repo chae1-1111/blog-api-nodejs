@@ -23,6 +23,8 @@ import {
     setCategories,
 } from "../controller/memberCont";
 
+import { getPostCountAll } from "../controller/postCont";
+
 // interfaces
 import {
     joinUserForm,
@@ -463,10 +465,19 @@ memberRouter.route("/getBlogInfo").get(async (req: any, res: any) => {
                 errorCode: "MEM001",
             });
         } else {
+            let categoryCount = getPostCountAll(
+                req.query.userid,
+                blogInfo.Categories
+            );
             res.status(200).json({
                 status: 200,
                 errorCode: null,
-                body: blogInfo,
+                body: {
+                    Email: blogInfo.Email,
+                    Name: blogInfo.Name,
+                    ProfileImage: blogInfo.ProfileImage,
+                    CategoryInfo: categoryCount,
+                },
             });
         }
     } catch (err) {
@@ -479,12 +490,12 @@ memberRouter.route("/getBlogInfo").get(async (req: any, res: any) => {
 
 memberRouter.route("/getCategories").get(async (req: any, res: any) => {
     try {
-        let categories = await getCategories(req.query.userkey);
+        let categories = (await getCategories(req.query.userkey)) as String[];
 
         res.status(200).json({
             status: 200,
             errorCode: null,
-            body: { Categories: categories as String[] },
+            body: { Categories: categories },
         });
     } catch (err) {
         res.status(500).json({
