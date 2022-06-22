@@ -134,10 +134,7 @@ export const incViews: Function = async (postkey: Number): Promise<Boolean> => {
 };
 
 // 게시글 상세 조회
-export const getOnePost: Function = async (
-    postkey: String,
-    userkey: Number
-) => {
+export const getOnePost: Function = async (postkey: number) => {
     return new Promise(async (resolve, reject) => {
         try {
             let result = await PostModel.find(
@@ -149,8 +146,6 @@ export const getOnePost: Function = async (
 
             if (result.length === 0) resolve(false);
 
-            let isOwner = result[0].UserKey == userkey; // 작성자인지 여부
-
             resolve({
                 Title: result[0].Title,
                 Description: result[0].Description,
@@ -159,7 +154,6 @@ export const getOnePost: Function = async (
                 Likes: result[0].Likes,
                 Name: result[0].Name,
                 UserId: result[0].UserId,
-                isOwner: isOwner,
             });
         } catch (err) {
             console.log(err);
