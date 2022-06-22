@@ -142,7 +142,7 @@ postRouter.route("/detail/:postkey").get(async (req: any, res: any) => {
         };
 
         // 게시글 정보, 게시글 작성자 여부
-        let result = await getOnePost(req.params.postkey);
+        let result = await getOnePost(parseInt(req.params.postkey));
         // 게시글 기추천 여부
         let like = await isLiker(data);
 
