@@ -1,4 +1,4 @@
-import { PostModel, ReplyModel } from "./connectDB";
+import { PostModel, ReplyModel, UserModel } from "./connectDB";
 
 import {
     modifyPostForm,
@@ -328,6 +328,12 @@ export const removeReply: Function = async (
                     Deleted: true,
                 },
             });
+            if (result.matchedCount !== 0) {
+                await PostModel.updateOne(
+                    { PostKey: replyFilter.PostKey },
+                    { $inc: { Replys: -1 } }
+                );
+            }
             resolve(result.matchedCount === 0 ? false : true);
         } catch (err) {
             console.log(err);
