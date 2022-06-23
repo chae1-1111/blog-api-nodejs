@@ -141,7 +141,7 @@ export const getOnePost: Function = async (postkey: number) => {
                 {
                     PostKey: postkey,
                 },
-                "-_id Title Description Created Views Likes Name UserId UserKey Category"
+                "-_id Title Description Created Views Likes Name UserId UserKey Category Keyword"
             );
 
             if (result.length === 0) resolve(false);
@@ -155,6 +155,7 @@ export const getOnePost: Function = async (postkey: number) => {
                 Name: result[0].Name,
                 UserId: result[0].UserId,
                 Category: result[0].Category,
+                Keyword: result[0].Keyword,
             });
         } catch (err) {
             console.log(err);
