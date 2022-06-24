@@ -5,7 +5,7 @@ import { LikeModel } from "./connectDB";
 export const like: Function = async (data: Like): Promise<boolean> => {
     return new Promise(async (resolve, reject) => {
         try {
-            if (await isLiker()) resolve(false);
+            if (await isLiker(data)) resolve(false);
             await new LikeModel({ ...data }).save();
             resolve(true);
         } catch (err) {
@@ -19,7 +19,7 @@ export const like: Function = async (data: Like): Promise<boolean> => {
 export const unlike: Function = async (data: Like): Promise<boolean> => {
     return new Promise(async (resolve, reject) => {
         try {
-            if (!(await isLiker())) resolve(false);
+            if (!(await isLiker(data))) resolve(false);
             let result = await LikeModel.deleteOne({
                 ...data,
             });
