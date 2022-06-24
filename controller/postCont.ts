@@ -269,7 +269,7 @@ export const getReplyList: Function = async (
         try {
             let data = await ReplyModel.find(
                 { PostKey: postkey },
-                "-_id ReplyKey Group Content UserId Name Deleted UserKey"
+                "-_id ReplyKey Group Content UserId Name Deleted UserKey Created"
             );
             let result: replyListForm[] = [];
             data.forEach((reply) => {
@@ -282,6 +282,7 @@ export const getReplyList: Function = async (
                     Name: reply.Name,
                     Deleted: reply.Deleted,
                     isWriter: reply.UserKey == userkey ? true : false,
+                    Created: reply.Created!,
                 };
                 result.push(temp);
             });
