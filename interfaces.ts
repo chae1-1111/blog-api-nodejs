@@ -35,7 +35,7 @@ export interface Reply {
     ReplyKey: Number;
     PostKey: Number;
     UserKey?: Number;
-    Group: Number;
+    Group: String;
     Content?: String;
     UserId?: String;
     Name?: String;
@@ -129,7 +129,7 @@ export interface replyForm {
 export interface replyListForm {
     PostKey: Number;
     ReplyKey: Number;
-    Group: Number;
+    Group: String;
     Content?: String;
     UserId?: String;
     Name?: String;
