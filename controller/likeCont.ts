@@ -39,6 +39,7 @@ export const isLiker: Function = async (data: Like): Promise<boolean> => {
                 { UserKey: data.UserKey, PostKey: data.PostKey },
                 "_id"
             );
+            console.log(data);
             console.log(result);
             resolve(result.length === 0 ? false : true);
         } catch (err) {
