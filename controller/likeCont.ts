@@ -35,12 +35,7 @@ export const unlike: Function = async (data: Like): Promise<boolean> => {
 export const isLiker: Function = async (data: Like): Promise<boolean> => {
     return new Promise(async (resolve, reject) => {
         try {
-            let result = await LikeModel.find(
-                { UserKey: data.UserKey, PostKey: data.PostKey },
-                "_id"
-            );
-            console.log(data);
-            console.log(result);
+            let result = await LikeModel.find({ ...data }, "_id");
             resolve(result.length === 0 ? false : true);
         } catch (err) {
             console.log(err);
