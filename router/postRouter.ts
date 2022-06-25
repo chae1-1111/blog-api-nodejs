@@ -48,7 +48,7 @@ postRouter.route("/").post(async (req: any, res: any) => {
         console.log(req.body.description);
         let post: postForm = {
             Title: req.body.title,
-            Description: req.body.descrition,
+            Description: req.body.description,
             Keyword: [...req.body.keyword],
             Category: req.body.category,
             UserKey: req.body.userkey,
