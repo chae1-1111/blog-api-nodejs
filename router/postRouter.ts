@@ -16,7 +16,7 @@ import {
     removeReply,
     getPostList,
 } from "../controller/postCont";
-import { getUser } from "../controller/memberCont";
+import { getUser, isOwner } from "../controller/memberCont";
 import { isLiker, like, unlike } from "../controller/likeCont";
 
 import { removeUndefined } from "../func/tools";
@@ -107,6 +107,26 @@ postRouter.route("/list/:userid").get(async (req: any, res: any) => {
             status: 200,
             errorCode: null,
             data: result,
+        });
+    } catch (err) {
+        res.status(500).json({
+            status: 500,
+            errorCode: "999",
+        });
+    }
+});
+
+// 게시글 소유자 여부
+postRouter.route("/isOwner").get(async (req: any, res: any) => {
+    try {
+        let owner: Boolean = await isOwner(
+            req.query.userid,
+            req.query.userkey ? req.query.userkey : -1
+        );
+        res.status(200).json({
+            status: 200,
+            errorCode: null,
+            isOwner: owner,
         });
     } catch (err) {
         res.status(500).json({
