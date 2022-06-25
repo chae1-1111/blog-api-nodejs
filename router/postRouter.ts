@@ -45,6 +45,7 @@ postRouter.route("/").post(async (req: any, res: any) => {
             });
             return;
         }
+        console.log(req.body.description);
         let post: postForm = {
             Title: req.body.title,
             Description: req.body.descrition,
