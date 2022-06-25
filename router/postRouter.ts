@@ -137,12 +137,25 @@ postRouter.route("/isOwner").get(async (req: any, res: any) => {
     }
 });
 
-// 게시글 상세
-postRouter.route("/detail/:postkey").get(async (req: any, res: any) => {
+postRouter.route("/incViews").put(async (req: any, res: any) => {
     try {
         // 게시글 조회수 증가
         await incViews(req.params.postkey);
+        res.status(200).json({
+            status: 200,
+            errorCode: null,
+        });
+    } catch (err) {
+        res.status(500).json({
+            status: 500,
+            errorCode: "999",
+        });
+    }
+});
 
+// 게시글 상세
+postRouter.route("/detail/:postkey").get(async (req: any, res: any) => {
+    try {
         let data: Like = {
             UserKey: req.query.userkey,
             PostKey: req.params.postkey,
