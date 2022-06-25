@@ -134,12 +134,17 @@ export const incViews: Function = async (postkey: Number): Promise<Boolean> => {
 };
 
 // 게시글 상세 조회
-export const getOnePost: Function = async (postkey: number) => {
+export const getOnePost: Function = async (
+    postkey: number,
+    userkey: number,
+    userid: string
+) => {
     return new Promise(async (resolve, reject) => {
         try {
             let result = await PostModel.find(
                 {
                     PostKey: postkey,
+                    UserId: userid,
                 },
                 "-_id Title Description Created Views Likes Name UserId UserKey Category Keyword Replys"
             );
@@ -157,6 +162,7 @@ export const getOnePost: Function = async (postkey: number) => {
                 Category: result[0].Category,
                 Keyword: result[0].Keyword,
                 Replys: result[0].Replys,
+                isOwner: result[0].UserKey === userkey,
             });
         } catch (err) {
             console.log(err);
