@@ -140,7 +140,7 @@ postRouter.route("/isOwner").get(async (req: any, res: any) => {
 postRouter.route("/incViews").put(async (req: any, res: any) => {
     try {
         // 게시글 조회수 증가
-        await incViews(req.params.postkey);
+        await incViews(req.body.postkey);
         res.status(200).json({
             status: 200,
             errorCode: null,
