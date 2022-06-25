@@ -15,8 +15,9 @@ import {
     removePost,
     removeReply,
     getPostList,
+    isOwner,
 } from "../controller/postCont";
-import { getUser, isOwner } from "../controller/memberCont";
+import { getUser } from "../controller/memberCont";
 import { isLiker, like, unlike } from "../controller/likeCont";
 
 import { removeUndefined } from "../func/tools";
@@ -120,7 +121,7 @@ postRouter.route("/list/:userid").get(async (req: any, res: any) => {
 postRouter.route("/isOwner").get(async (req: any, res: any) => {
     try {
         let owner: Boolean = await isOwner(
-            req.query.userid,
+            req.query.postkey,
             req.query.userkey ? req.query.userkey : -1
         );
         res.status(200).json({

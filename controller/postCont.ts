@@ -11,6 +11,27 @@ import {
     replyListForm,
 } from "../interfaces";
 
+export const isOwner: Function = async (
+    postkey: number,
+    userkey: number
+): Promise<boolean> => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const result = await PostModel.find(
+                {
+                    PostKey: postkey,
+                    UserKey: userkey,
+                },
+                "_id"
+            );
+            resolve(result.length === 0 ? false : true);
+        } catch (err) {
+            console.log(err);
+            reject();
+        }
+    });
+};
+
 // 게시글 등록
 export const registPost: Function = async (data: postForm): Promise<Number> => {
     return new Promise(async (resolve, reject) => {
