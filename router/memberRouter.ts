@@ -21,6 +21,7 @@ import {
     getBlogInfo,
     getCategories,
     setCategories,
+    isOwner,
 } from "../controller/memberCont";
 
 import { getPostCountAll } from "../controller/postCont";
@@ -469,6 +470,11 @@ memberRouter.route("/getBlogInfo").get(async (req: any, res: any) => {
                 req.query.userid,
                 blogInfo.Categories
             );
+            // 블로그 소유자 여부
+            let owner: Boolean = await isOwner(
+                req.params.userid,
+                req.query.userkey ? req.query.userkey : -1
+            );
 
             res.status(200).json({
                 status: 200,
@@ -478,6 +484,7 @@ memberRouter.route("/getBlogInfo").get(async (req: any, res: any) => {
                     Name: blogInfo.Name,
                     ProfileImage: blogInfo.ProfileImage,
                     CategoryInfo: categoryCount,
+                    isOwner: owner,
                 },
             });
         }
