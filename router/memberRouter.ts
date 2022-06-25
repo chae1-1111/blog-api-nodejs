@@ -472,7 +472,7 @@ memberRouter.route("/getBlogInfo").get(async (req: any, res: any) => {
             );
             // 블로그 소유자 여부
             let owner: Boolean = await isOwner(
-                req.params.userid,
+                req.query.userid,
                 req.query.userkey ? req.query.userkey : -1
             );
 
