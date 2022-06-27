@@ -323,6 +323,7 @@ export const getReplyList: Function = async (
                 };
                 result.push(temp);
             });
+            console.log(result);
             resolve(result);
         } catch (err) {
             console.log(err);
