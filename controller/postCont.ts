@@ -10,6 +10,7 @@ import {
     replyForm,
     replyListForm,
 } from "../interfaces";
+import { getProfileImage } from "./memberCont";
 
 export const isOwner: Function = async (
     postkey: number,
@@ -172,6 +173,10 @@ export const getOnePost: Function = async (
 
             if (result.length === 0) resolve(false);
 
+            let profileImage = await getProfileImage(
+                result[0].UserId as string
+            );
+
             resolve({
                 Title: result[0].Title,
                 Description: result[0].Description,
@@ -184,6 +189,7 @@ export const getOnePost: Function = async (
                 Keyword: result[0].Keyword,
                 Replys: result[0].Replys,
                 isOwner: result[0].UserKey === userkey,
+                profileImage: profileImage,
             });
         } catch (err) {
             console.log(err);
@@ -299,7 +305,10 @@ export const getReplyList: Function = async (
                 "-_id ReplyKey Group Content UserId Name Deleted UserKey Created"
             );
             let result: replyListForm[] = [];
-            data.forEach((reply) => {
+            data.forEach(async (reply) => {
+                let profileImage = await getProfileImage(
+                    reply.UserId as string
+                );
                 let temp = {
                     PostKey: reply.PostKey,
                     ReplyKey: reply.ReplyKey,
@@ -310,6 +319,7 @@ export const getReplyList: Function = async (
                     Deleted: reply.Deleted,
                     isWriter: reply.UserKey == userkey ? true : false,
                     Created: reply.Created!,
+                    profileImage: profileImage,
                 };
                 result.push(temp);
             });
