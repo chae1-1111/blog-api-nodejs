@@ -329,7 +329,6 @@ postRouter.route("/reply").post(async (req: any, res: any) => {
 postRouter.route("/reply").get(async (req: any, res: any) => {
     try {
         let result = await getReplyList(req.query.postkey, req.query.userkey);
-        console.log(result);
         res.status(200).json({
             status: 200,
             errorCode: null,
