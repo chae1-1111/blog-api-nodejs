@@ -1,5 +1,8 @@
 export const memberRouter = require("express").Router();
 const multer = require("multer");
+const fs = require("fs");
+const sharp = require("sharp");
+const path = require("path");
 
 // Controller
 import {
@@ -410,9 +413,15 @@ memberRouter.put(
     upload.single("img"),
     async (req: any, res: any) => {
         try {
+            const { filename: image } = req.file;
+            await sharp(req.file.path)
+                .resize(150, 150)
+                .jpeg({ quality: 90 })
+                .toFile(path.resolve(req.file.destination, "resized", image));
+            fs.unlinkSync(req.file.path);
             let result = await editProfileImage(
                 req.body.userkey,
-                req.file.path
+                path.resolve(req.file.destination, "resized", image)
             );
             if (!result) {
                 res.status(201).json({
