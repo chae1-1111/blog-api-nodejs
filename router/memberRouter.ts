@@ -435,6 +435,7 @@ memberRouter.put(
                 });
             }
         } catch (err) {
+            console.log(err);
             res.status(500).json({
                 status: 500,
                 errorCode: "999",
