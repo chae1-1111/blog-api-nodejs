@@ -323,6 +323,7 @@ export const getReplyList: Function = async (
                     profileImage: profileImage,
                 };
                 result.push(temp);
+                console.log(result);
             });
             console.log(result);
             resolve(result);
