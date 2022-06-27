@@ -307,7 +307,7 @@ export const getReplyList: Function = async (
 
             let result: replyListForm[] = [];
 
-            await data.forEach(async (reply) => {
+            for (const reply of data) {
                 let profileImage = await getProfileImage(
                     reply.UserId as string
                 );
@@ -323,8 +323,7 @@ export const getReplyList: Function = async (
                     profileImage: profileImage,
                 };
                 result.push(temp);
-                console.log(result);
-            });
+            }
             console.log(result);
             resolve(result);
         } catch (err) {
