@@ -320,8 +320,8 @@ export const getReplyList: Function = async (
                     Created: reply.Created!,
                     profileImage: profileImage,
                 };
-                console.log(temp);
-                result.push(temp);
+                await result.push(temp);
+                console.log(result);
             });
             console.log(result);
             resolve(result);
