@@ -136,7 +136,7 @@ export interface replyListForm {
     isWriter: Boolean;
     Deleted: Boolean;
     Created: Date;
-    profileImage: String;
+    profileImage: any;
 }
 
 export interface replyFilterForm {
