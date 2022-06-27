@@ -310,7 +310,6 @@ export const getReplyList: Function = async (
                     reply.UserId as string
                 );
                 let temp = {
-                    PostKey: reply.PostKey,
                     ReplyKey: reply.ReplyKey,
                     Group: reply.Group,
                     Content: reply.Content,

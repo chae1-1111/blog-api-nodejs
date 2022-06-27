@@ -127,7 +127,6 @@ export interface replyForm {
 }
 
 export interface replyListForm {
-    PostKey: Number;
     ReplyKey: Number;
     Group: String;
     Content?: String;
