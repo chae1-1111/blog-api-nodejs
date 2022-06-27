@@ -421,7 +421,7 @@ memberRouter.put(
             fs.unlinkSync(req.file.path);
             let result = await editProfileImage(
                 req.body.userkey,
-                path.resolve(req.file.destination, "resized", image)
+                "resized" + req.file.path
             );
             if (!result) {
                 res.status(201).json({
