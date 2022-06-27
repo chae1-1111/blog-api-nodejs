@@ -309,7 +309,6 @@ export const getReplyList: Function = async (
                 let profileImage = await getProfileImage(
                     reply.UserId as string
                 );
-                console.log(profileImage);
                 let temp = {
                     PostKey: reply.PostKey,
                     ReplyKey: reply.ReplyKey,
@@ -322,6 +321,7 @@ export const getReplyList: Function = async (
                     Created: reply.Created!,
                     profileImage: profileImage,
                 };
+                console.log(temp);
                 result.push(temp);
             });
             console.log(result);
