@@ -305,7 +305,7 @@ export const getReplyList: Function = async (
                 "-_id ReplyKey Group Content UserId Name Deleted UserKey Created"
             );
             let result: replyListForm[] = [];
-            data.forEach(async (reply) => {
+            await data.forEach(async (reply) => {
                 let profileImage = await getProfileImage(
                     reply.UserId as string
                 );
@@ -321,7 +321,6 @@ export const getReplyList: Function = async (
                     profileImage: profileImage,
                 };
                 await result.push(temp);
-                console.log(result);
             });
             console.log(result);
             resolve(result);
