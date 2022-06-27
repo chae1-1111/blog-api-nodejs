@@ -417,11 +417,11 @@ memberRouter.put(
             await sharp(req.file.path)
                 .resize(150, 150)
                 .jpeg({ quality: 90 })
-                .toFile(path.resolve(req.file.destination, "resized", image));
+                .toFile(path.resolve(req.file.destination, `resized_${image}`));
             fs.unlinkSync(req.file.path);
             let result = await editProfileImage(
                 req.body.userkey,
-                "resized" + req.file.path
+                path.resolve(req.file.destination, `resized_${image}`)
             );
             if (!result) {
                 res.status(201).json({
