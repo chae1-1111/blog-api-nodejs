@@ -60,13 +60,9 @@ export const PostModel = model<Post>("post", PostSchema);
 export const ReplySchema = new Schema<Reply>({
     PostKey: { type: Number, require: true },
     ReplyKey: { type: Number, unique: true, require: true },
-    // Group : 대댓글인 경우 상위 댓글의 key, 일반 댓글인 경우 자기 자신의 key
     Group: {
-        type: Number,
+        type: String,
         require: true,
-        default: function (): Number {
-            return this.ReplyKey;
-        },
     },
     Content: String,
     UserKey: Number,
