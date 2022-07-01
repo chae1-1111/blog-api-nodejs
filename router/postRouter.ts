@@ -307,7 +307,7 @@ postRouter.route("/reply").post(async (req: any, res: any) => {
         let data: replyForm = removeUndefined({
             UserKey: req.body.userkey,
             PostKey: req.body.postkey,
-            Group: req.body.postkey,
+            Group: req.body.group,
             Content: req.body.content,
             UserId: user.UserId,
             Name: user.Name,
