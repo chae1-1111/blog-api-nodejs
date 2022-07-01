@@ -442,7 +442,7 @@ export const getProfileImage = async (userid: string): Promise<any> => {
                 "-_id ProfileImage"
             );
             if (result.length === 0) {
-                resolve(false);
+                resolve("");
             } else if (result[0].ProfileImage === "") {
                 resolve("");
             } else {
