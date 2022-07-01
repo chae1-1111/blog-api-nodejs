@@ -120,7 +120,7 @@ export interface modifyPostForm {
 export interface replyForm {
     UserKey: Number;
     PostKey: Number;
-    Group?: Number;
+    Group: String;
     Content: String;
     UserId: String;
     Name: String;
